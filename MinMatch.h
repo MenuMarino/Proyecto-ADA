@@ -24,26 +24,6 @@ public:
         }
 
         setPesosYRangos();
-
-        for (int i : pesosA) {
-            cout << i << " ";
-        }
-
-        cout << endl;
-
-        for (int i : pesosB) {
-            cout << i << " ";
-        }
-
-        cout << "\n" << endl;
-
-        for (pair<int, int> i : rangosA) {
-            cout << i.first << " " << i.second << endl;
-        }
-
-        for (pair<int, int> i : rangosB) {
-            cout << i.first << " " << i.second << endl;
-        }
     }
 
     ///Metodos importantes
