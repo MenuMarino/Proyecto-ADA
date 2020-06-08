@@ -37,7 +37,6 @@ public:
         ///Respuesta.first contiene el matching, respuesta.second contiene el peso minimo.
         pair< vector< pair<int, int> > , float > respuesta = algoritmoRecursivo(pesosA, pesosB);
 
-        //TODO: Hacer un print alaraco
         cout << "El peso es: " << respuesta.second << "\nEl matching es: " << endl;
 
         for (auto & i : respuesta.first) {
