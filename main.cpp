@@ -1,16 +1,15 @@
 #include <iostream>
 #include <vector>
-#include <utility>
 #include "MinMatch.h"
 
 using namespace std;
 
 int main() {
-    vector<int> A = {1,0,1,1,0,1,1,0,0,0,0,1,0,1};
-    vector<int> B = {0,1,1,0,0,1,1,1,0,1,0,0,1,1};
+    vector<int> A = {0,1,1,1,0,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0};
+    vector<int> B = {0,0,1,1,0,1,1,0,0,0,1,1,1,1,1,0,0,1,1,0};
     auto minMatch = new MinMatch(A, B);
 
-
+    minMatch->recursivo();
 
     delete(minMatch);
     return 0;
