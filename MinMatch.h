@@ -44,7 +44,7 @@ public:
         pair< vector< pair<int, int> > , float > respuesta = algoritmoRecursivo(pesosA, pesosB);
         t1 = clock();
 
-        cout << "Algoritmo recursivo. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC) << endl;
+        cout << "Algoritmo recursivo. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC) << " segundos." << endl;
         cout << "El peso es: " << respuesta.second << "\nEl matching es: " << endl;
 
         for (auto & i : respuesta.first) {
@@ -66,7 +66,7 @@ public:
         pair< vector< pair<int, int> > , float > respuesta = algoritmoMemoizado(pesosA, pesosB);
         t1 = clock();
 
-        cout << "\n\nAlgoritmo memoizado. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC);
+        cout << "\n\nAlgoritmo memoizado. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC) << " segundos.";
         cout << "\nEl peso es: " << respuesta.second << "\nEl matching es: " << endl;
 
         for (auto & i : respuesta.first) {
