@@ -1,4 +1,4 @@
-# Proyecto ADA
+# Secuencias
 
 Proyecto parcial del curso Análisis y Diseño de Algoritmos.
 
