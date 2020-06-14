@@ -171,8 +171,7 @@ private:
                 suma += (valA / valB);
                 i++;
                 j++;
-            }
-            else if( a[i] > b[j]){
+            } else if( a[i] > b[j]) {
                 A_aux.push_back(i);
                 valA = float(a[i]);
 
@@ -188,8 +187,7 @@ private:
                 R.push_back( holder );
                 suma += (valA / valB);
                 i++;
-            }
-            else if( a[i] < b[j] ){
+            } else if( a[i] < b[j] ) {
                 B_aux.push_back(j);
                 valB = float(b[j]);
 
@@ -236,6 +234,7 @@ private:
 
         return aux;
     }
+    
     ///El pair contiene el matching y el peso
     static pair< vector< pair<int, int> > , float > algoritmoRecursivo(vector<float> a, vector<float> b) {
         ///Variables para ayudar
