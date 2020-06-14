@@ -52,7 +52,7 @@ public:
         for (auto & i : respuesta.first) {
             cout << i.first << " " << i.second << " | ";
         }
-
+        cout << endl;
         return respuesta;
     }
 
@@ -68,12 +68,13 @@ public:
         pair< vector< pair<int, int> > , float > respuesta = algoritmoMemoizado(pesosA, pesosB);
         t1 = clock();
 
-        cout << "\n\nAlgoritmo memoizado. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC) << " segundos.";
+        cout << "\nAlgoritmo memoizado. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC) << " segundos.";
         cout << "\nEl peso es: " << respuesta.second << "\nEl matching es: " << endl;
 
         for (auto & i : respuesta.first) {
             cout << i.first << " " << i.second << " | ";
         }
+        cout << endl;
 
         ///Limpiar la matriz
         borrarMatriz();
@@ -93,12 +94,13 @@ public:
         pair< vector< pair<int, int> > , float > respuesta = algoritmoDinamico(pesosA, pesosB);
         t1 = clock();
 
-        cout << "\n\nAlgoritmo dinamico. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC);
+        cout << "\nAlgoritmo dinamico. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC);
         cout << "\nEl peso es: " << respuesta.second << "\nEl matching es: " << endl;
 
         for (auto & i : respuesta.first) {
             cout << i.first << " " << i.second << " | ";
         }
+        cout << endl;
 
         ///Limpiar la matriz
         borrarMatriz();
