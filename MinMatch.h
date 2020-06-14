@@ -37,6 +37,35 @@ public:
     }
 
     ///Mascaras
+    pair< vector< pair< vector<int>, vector<int> > >, float > greedy() {
+        ///Medir tiempo
+        unsigned t0, t1;
+
+        ///Respuesta.first contiene el matching (en un vector de pairs), respuesta.second contiene el peso minimo.
+        t0 = clock();
+        pair< vector< pair< vector<int>, vector<int> > >, float > respuesta = algoritmoGreedy(pesosA, pesosB);
+        t1 = clock();
+
+        cout <<endl<< "Algoritmo greedy. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC) << " segundos." << endl;
+        cout << "El peso es: " << respuesta.second << "\nEl matching es: " << endl << endl;
+        cout << endl << "__________________________" << endl;
+        for(int i = 0; i< respuesta.first.size(); ++i){
+            cout <<"C"<< i+1 << " Indices(s) en A': ";
+            for(int j = 0; j < respuesta.first[i].first.size(); ++j){
+                cout << respuesta.first[i].first[j] << " ";
+            }
+            cout << endl << endl;
+            cout <<"C"<< i+1 << " Indices(s) en B': ";
+            for(int k = 0; k < respuesta.first[i].second.size(); ++k){
+                cout << respuesta.first[i].second[k] << " ";
+            }
+            cout << endl << "__________________________" << endl;
+        }
+
+        return respuesta;
+    }
+    
+    
     pair< vector< pair<int, int> > , float > recursivo() {
         ///Medir tiempo
         unsigned t0, t1;
@@ -113,6 +142,100 @@ public:
 
 private:
     ///Metodos importantes
+     pair< vector< pair< vector<int>, vector<int> > >, float > algoritmoGreedy(vector<float> a, vector<float> b){
+
+        vector< pair< vector<int>, vector<int> > > R;
+        vector<int> A_aux;
+        vector<int> B_aux;
+        int m = a.size();
+        int n = b.size();
+        int i = 0;
+        int j = 0;
+        pair< vector<int>, vector<int> > holder;
+        float suma = 0.0;
+        float valA = 0.0;
+        float valB = 0.0;
+
+        while( i < m-1 && j < n-1){
+            if( a[i] == b[j] ){
+                A_aux.push_back(i);
+                valA = float(a[i]);
+
+                B_aux.push_back(j);
+                valB = float(a[j]);
+
+                holder.first = A_aux;
+                holder.second = B_aux;
+
+                R.push_back( holder );
+                suma += (valA / valB);
+                i++;
+                j++;
+            }
+            else if( a[i] > b[j]){
+                A_aux.push_back(i);
+                valA = float(a[i]);
+
+                while( (valA > valB)   && (j < n-1)){
+
+                    B_aux.push_back(j);
+                    valB += float(b[j]);
+                    j++;
+                }
+                holder.first = A_aux;
+                holder.second = B_aux;
+
+                R.push_back( holder );
+                suma += (valA / valB);
+                i++;
+            }
+            else if( a[i] < b[j] ){
+                B_aux.push_back(j);
+                valB = float(b[j]);
+
+                while( (valB > valA ) && (i < m-1) ){
+                    A_aux.push_back(i);
+                    valA += float(a[i]) ;
+                    i++;
+                }
+
+                holder.first = A_aux;
+                holder.second = B_aux;
+
+                R.push_back( holder );
+                suma += (valA / valB);
+                j++;
+            }
+            valA = 0;
+            valB = 0;
+            A_aux.clear();
+            B_aux.clear();
+        }
+
+        while(i < m){
+            A_aux.push_back(i);
+            valA += float(a[i]);
+            i++;
+        }
+        while(j < n){
+            B_aux.push_back(j);
+            valB += float(b[j]);
+            j++;
+        }
+
+        holder.first = A_aux;
+        holder.second = B_aux;
+
+        R.push_back( holder );
+        suma += ( valA / valB );
+
+        pair< vector< pair< vector<int>, vector<int> > >, float > aux;
+
+        aux.second = suma;
+        aux.first = R;
+
+        return aux;
+    }
     ///El pair contiene el matching y el peso
     static pair< vector< pair<int, int> > , float > algoritmoRecursivo(vector<float> a, vector<float> b) {
         ///Variables para ayudar
