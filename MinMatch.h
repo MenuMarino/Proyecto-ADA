@@ -47,7 +47,7 @@ public:
         t1 = clock();
 
         cout <<endl<< "Algoritmo greedy. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC) << " segundos." << endl;
-        cout << "El peso es: " << respuesta.second << "\nEl matching es: " << endl << endl;
+        cout << "El peso es: " << respuesta.second << "\nEl matching es: ";
         cout << endl << "__________________________" << endl;
         for(int i = 0; i< respuesta.first.size(); ++i){
             cout <<"C"<< i+1 << " Indices(s) en A': ";

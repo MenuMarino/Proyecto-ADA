@@ -11,9 +11,10 @@ int main() {
     auto minMatch = new MinMatch(A, B);
 
     ///Algoritmos
+    minMatch->greedy();
     minMatch->recursivo();
     minMatch->memoizado();
-    minMatch->dinamico();
+//    minMatch->dinamico();
 
     delete(minMatch);
     return 0;
