@@ -65,8 +65,7 @@ public:
 
         return respuesta;
     }
-    
-    
+
     pair< vector< pair<int, int> > , float > recursivo() {
         ///Medir tiempo
         unsigned t0, t1;

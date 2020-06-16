@@ -66,8 +66,9 @@ int main() {
 
             delete (minMatch);
         }
+        default:
+            break;
     }
-
-
+    
     return 0;
 }
