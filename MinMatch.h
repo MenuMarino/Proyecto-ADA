@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iterator>
 #include <ctime>
+#include <fstream>
 
 using namespace std;
 
@@ -33,7 +34,7 @@ public:
             B.push_back(i);
         }
 
-        setPesosYRangos();
+        setPesos();
     }
 
     ///Mascaras
@@ -569,7 +570,7 @@ private:
     }
 
     ///Metodos de apoyo
-    void setPesosYRangos() {
+    void setPesos() {
         int temp = 0;
         bool enabled = false;
         int i;

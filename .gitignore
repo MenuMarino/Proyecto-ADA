@@ -2,4 +2,5 @@
 CMakeLists.txt
 .idea
 proyecto.o
+*.txt
 cmake-build-debug/
