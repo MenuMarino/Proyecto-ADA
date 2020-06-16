@@ -1,0 +1,597 @@
+\documentclass[12pt,a4,paper]{article}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{algorithmic}
+\usepackage{mathtools}
+\usepackage{todonotes}
+\usepackage{comment}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+%Punto despues del numero en seccion
+\usepackage{titlesec}
+\titlelabel{\thetitle.\quad}
+
+% Comillas
+\newcommand{\quotes}[1]{``#1''}
+
+\newlength\myindent
+\setlength\myindent{2em}
+\newcommand\bindent{%
+  \begingroup
+  \setlength{\itemindent}{\myindent}
+  \addtolength{\algorithmicindent}{\myindent}
+}
+\newcommand\eindent{\endgroup}
+
+\begin{document}
+\begin{titlepage}
+	\centering
+	\includegraphics[width=0.3\textwidth]{utec2.png}\par\vspace{1cm}
+	{\scshape\Large An\'alisis y Diseño de Algoritmos\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Proyecto Parcial\par}
+	\vspace{1.5cm}
+	{\Large\itshape Benjamín Díaz García\par}
+	\href{mailto:benjamin.diaz@utec.edu.pe}{benjamin.diaz@utec.edu.pe}\\
+	\vspace{0.5cm}
+	{\Large\itshape Gabriel Spranger Rojas\par}
+	\href{mailto:gabriel.spranger@utec.edu.pe}{gabriel.spranger@utec.edu.pe}\\
+	\vspace{0.5cm}
+	{\Large\itshape Rodrigo C\'espedes Vel\'asquez\par}
+	\href{mailto:rodrigo.cespedes@utec.edu.pe}{rodrigo.cespedes@utec.edu.pe}\\
+	\vspace{1.5cm}
+
+	\vfill
+	Profesor:\par
+	Ph.D. Juan Gabriel Gutiérrez Alva
+
+	\vfill
+	{\large \today\par}
+\end{titlepage}
+
+\newcommand{\algcost}[2]{\strut\hfill\makebox[1.5cm][l]{#1}\makebox[0cm][l]{#2}}
+
+\section*{Introducción}
+
+En el presente trabajo se presentar\'an, explicar\'an y demostra\'ran algoritmos ideados por nosotros para resolver diferentes problemas propuestos.\newline Cada problema ser\'a resuelto a trav\'es de distintos tipos de algoritmos ( Voraz, Recursivo, Memoizado y de Programaci\'on Din\'amica. )
+\newline\newline 
+A lo largo del trabajo se seguir\'a una estructura predefinida.\newline
+Primero, se presentar\'a el problema, tipo de algoritmo y lo que es requerido del algoritmo, as\'i como sus entradas y salidas. Despu\'es se exhibir\'a el pseudoc\'odigo correspondiente a nuestra soluci\'on. Finalmente, se expondr\'a el an\'alisis de tiempo para dicha respuesta, adem\'as de su demostraci\'on. En algunos casos tambi\'en se pondr\'a la recurrencia correspondiente (si es pertinente).\newline\newline
+Puede que para algunas preguntas existan formatos diferentes, pues en algunos casos se recurre a distintos m\'etodos para evidenciar o demostrar alguna caracter\'istica de nuestra respuesta, pero en general casi todas las preguntas siguen la misma estructura.
+
+
+
+\newpage
+
+\section{Algoritmo Voraz} 
+\textbf{Analice, diseñe e implemente un algoritmo voraz con complejidad lineal para el problema \textsc{MIN-MATCHING}. Su algoritmo no necesariamente debe encontrar el matching de peso mínimo.}\\
+
+\begin{algorithmic}[1]
+    \REQUIRE Dos arreglos $A$ y $B$ de ceros y unos de tamaño $p$ con $n$ y $m$ bloques, respectivamente.
+    \ENSURE Un matching entre $A$ y $B$, no necesariamente óptimo, y su peso.
+    \newline
+    \TITLE {\textbf{\textsc{MIN-MATCHING-GREEDY}$(A',B')$:}}
+        \STATE Sea $A'$ el arreglo con los bloques de $A$ con $n$ bloques.
+        \STATE Sea $B'$ el arreglo con los bloques de $B$ con $m$ bloques
+        \WHILE {$i < m-1 \text{ } \AND \text{ } j < n-1$}
+            \IF {$A'[i]$ ==  $B'[j]$}
+                \STATE {$auxA'$.pushback({$i$})}
+                \STATE {$auxB'$.pushback({$j$})}
+                \STATE {$R$.pushback( $pair(auxA',$ $auxB')$ )}
+                \STATE {$sumavalor$ += $A'[i]$ / $B'[j]$}
+                \STATE {$i++$}
+                \STATE {$j++$}
+            \ENDIF
+            \ELSIF{ $A'[i] >$  $B'[j]$ }
+                \STATE{$auxA$ .pushback($i$)}
+                \STATE{$valA'$ = $A'[i]$}
+                \WHILE{$(valA' > valB')$ \AND $(j < n-1)$ }
+                    \STATE {$auxB'$.pushback({$j$})}
+                    \STATE {$valB'$ += $B'[j]$}
+                    \STATE {$j++$}
+                \ENDWHILE
+                 \STATE {$R$.pushback( $pair(auxA',$ $auxB')$ )}
+                \STATE {$sumavalor$ += $valA$ / $valB'$}
+                \STATE {$i++$}
+            \ENDELSIF
+            \ELSE
+                \STATE {$auxB'$.pushback($j$)}
+                \STATE{$valB'$ = $B'[j]$}
+                \STATE
+                \WHILE{$(valA' < valB')$ \AND $(i < m-1)$ }
+                    \STATE {$auxA'$.pushback({$i$})}
+                    \STATE {$valA'$ += $A'[i]$}
+                    \STATE {$i++$}
+                \ENDWHILE
+                 \STATE {$R$.pushback( $pair(auxA',$ $auxB')$ )}
+                \STATE {$sumavalor$ += $valA'$ / $valB'$}
+                \STATE {$j++$}
+            \ENDELSE
+                \STATE{$valA'$ = $0$}
+                \STATE{$valB'$ = $0$}
+                \STATE{$auxA'$.clear()}
+                \STATE{$auxB'$.clear()}
+        \ENDWHILE
+        \STATE
+        \STATE{$auxA'$.pushback($i, (i+1)\ldots (m-1)$)}
+        \STATE{$valA'$ += ($A'[i], A'[i+1]\ldots A'[m-1]$)}
+        \STATE
+        \STATE{$auxB'$.pushback($j, (j+1)\ldots (n-1)$)}
+        \STATE{$valB'$ += ($B'[j], B'[j+1]\ldots B[n-1]$)}
+        \STATE
+        \STATE {$R$.pushback( $pair(auxA',$ $auxB')$ )}
+        \STATE {$sumavalor$ += $valA'$ / $valB'$}
+        \STATE
+        \RETURN $pair(sumavalor,$ $R)$
+        
+\end{algorithmic}
+
+\subsection*{Análisis de Tiempo}
+Las veces seran analizadas en el peor de los casos. Por temas de practicidad utilizaremos la letra $c$ como la constante de mayor valor posible en el contexto donde se utiliza.\newline
+
+\textbf{Linea} 3 a 11:\newline
+Tiempo: c \newline
+Veces: min(m-x, n-y), (0 $\leq$ x,y $\leq$ m-1,n-1)\newline
+
+\textbf{Linea} 12 a 14:\newline
+Tiempo: c \newline
+Veces: min(m-x, n-y)\newline
+
+\textbf{Linea} 15 a 19:\newline
+Tiempo: c \newline
+Veces: x  \newline
+
+\textbf{Linea} 20 a 22:\newline
+Tiempo: c \newline
+Veces: min(m-x, n-y) \newline
+
+\textbf{Linea} 23 a 26:\newline
+Tiempo: c \newline
+Veces: min(m-x, n-y) \newline
+
+\textbf{Linea} 27 a 31:\newline
+Tiempo: c \newline
+Veces: y \newline
+
+\textbf{Linea} 32 a 39:\newline
+Tiempo: c \newline
+Veces: min(m-x, n-y) \newline
+
+\textbf{Linea} 41:\newline
+Tiempo: m-(m-x) \newline
+Veces: 1 \newline
+
+\textbf{Linea} 42:\newline
+Tiempo: m-(m-x)\newline
+Veces: 1 \newline
+
+\textbf{Linea} 44:\newline
+Tiempo: n-(n-y) \newline
+Veces: 1 \newline
+
+\textbf{Linea} 45:\newline
+Tiempo: n-(n-y)\newline
+Veces: 1 \newline
+
+\textbf{Linea} 47 a 50:\newline
+Tiempo: c \newline
+Veces: 1 \newline\newline
+
+\textbf{Entonces tenemos que:}
+
+c*min(m-x,n-y) + c*min(m-x,n-y) + c*x + c*min(m-x,n-y) + c*min(m-x,n-y) +c*y + c*min(m-x,n-y) + c*(m-(m-x)) + c*(m-(m-x)) + c*(n-(n-y)) + c*(n-(n-y)) + c\newline
+\textbf{Es equivalente a:}\newline
+c*min(m-x,n-y) + c*x + c*y + c*(m-(m-x)) + c*(n-(n-y)) + c\newline
+\textbf{Es equivalente a:}\newline
+c*min(m-x,n-y) + c*x + c*y + c*m - c*(m-x) + c*n - c*(n-y) + c\newline
+\textbf{Es equivalente a:}\newline
+c*min(m-x,n-y) + c*x + c*y + c*m - c*m + c*x + c*n - c*n + c*y + c\newline
+\textbf{Es equivalente a:}\newline
+c*min(m-x,n-y) + c*x + c*y + c*x + c*y + c\newline
+\textbf{Se sabe que min(m-x,n-y) $\leq$ max(m,n), entonces esta expresión es mayor o igual}\newline
+c*max(m,n) + c*m + c*n + c*m + c*n + c\newline
+\textbf{Es equivalente a:}\newline
+c*max(m,n) + c*m + c*n + c\newline
+\textbf{Sabemos que m $\leq$ max(m,n) y que n $\leq$ max(m,n), entonces la siguiente expresión es mayor o igual}\newline
+c*max(m,n) + c*max(m,n) + c*max(m,n) + c*max(m,n)\newline
+\textbf{Lo cual es equivalente a }\newline
+c*max(m,n) \newline
+\textbf{Y sabemos que c*max(m,n) $\leq$ O(max(m,n)) }\newline
+
+\newpage
+
+\section{Recurrencia}
+
+\textbf{Plantee una recurrencia para $OPT(i, j)$.}
+
+\begin{equation*}
+    OPT(i, j) =
+    \begin{cases}
+        \frac{A_1}{B_1} & \text{si } i = 1 \text{ y } j = 1\\\\
+        \frac{A_1+A_2+\ldots+A_i}{B_1} & \text{si } j = 1 \text{ y } i > 1\\\\
+        \frac{A_1}{B_1+B_2+\ldots+B_j} & \text{si } i = 1 \text{ y } j > 1\\\\
+        \min\textbf{ \bigg\{ } \newline \min_{k=j-1}^{1}\{\text{ } OPT(i-1,k) + \frac{A_i}{B_{k+1}+\ldots+B_j} \text{ }\}, \\\\ \min_{k=1}^{i-1}\{\text{ } OPT(k,j-1) + \frac{A_{k+1}+\ldots +A_{i}}{B_j} \text{ }\} \text{ } \textbf{ \bigg\} } & \text{caso contrario}\\\\
+    \end{cases}
+\end{equation*}
+
+\newpage
+
+\section{Recursivo}
+
+\textbf{Analice, diseñe e implemente un algoritmo recursivo con complejidad exponencial para el problema \textsc{MIN-MATCHING}. Su algoritmo deberá encontrar el matching del peso mínimo.}\\
+
+\begin{algorithmic}[1]
+    \REQUIRE Dos arreglos $A$ y $B$ de ceros y unos, de tamaño $p$ con $n$ y $m$ bloques, respectivamente.
+    \ENSURE Un matching entre $A$ y $B$, de peso mínimo, y su peso. \newline \newline
+    \TITLE {\textbf{\textsc{MIN-MATCHING}$(A,B)$:} }
+        \STATE Sea $A'$ el arreglo con los bloques de $A$ con $n$ bloques.
+        \STATE Sea $B'$ el arreglo con los bloques de $B$ con $m$ bloques
+        \STATE Sea $X$ el vector de las conexiones que se van a realizar entre $A'$ y $B'$.
+        \STATE Sea $Respuesta$ un $pair<vector, float>$ que contiene X y el peso.
+        \IF {$n$ == 1 \AND $m$ == 1}
+            \STATE {Respuesta.first.emplace\_back($A'_1, B'_1$)}
+            \STATE {Respuesta.second =  $\dfrac{A'_1}{B'_1}$}
+            \RETURN Respuesta
+        \ENDIF
+        \STATE
+        \IF {$m$ == 1}
+            \STATE Respuesta.first.emplace\_back($A'_1+A'_2+\ldots +A'_n, B'_1$)
+            \STATE Respuesta.second = $\dfrac{A'_1+A'_2+\ldots +A'_n}{B'_1}$
+            \RETURN Respuesta
+        \ENDIF
+        \STATE
+        \IF {$n$ == 1}
+            \STATE Respuesta.first.emplace\_back($A'_1, B'_1+B'_2+\ldots +B'_m$)
+            \STATE Respuesta.second = $\dfrac{A'_1}{B'_1+B'_2+\ldots +B'_m}$
+            \RETURN Respuesta
+        \ENDIF
+        \STATE
+        \STATE {$min\gets{\infty}$}
+        \STATE {$A_* = A \setminus A'_n$} \COMMENT{Le quitamos el último bloque a $A$}
+        \FOR{\text{k = m - 1 \textbf{downto} 1}}
+            \STATE {$B_* = B'_{1\ldots k}$} \COMMENT{Agarramos los primeros $k$ bloques}
+            \STATE {Respuesta' $\gets$ {\textsc{MIN-MATCHING}$(A_*, B_*)$}}
+            \STATE {Respuesta'.second $\gets$ Respuesta'.second $ + \frac{A'_n}{B_{k+1}+\ldots+B_m}$}
+            \IF {$min >$ Respuesta'.second} 
+                \STATE Respuesta.first.clear()
+                \STATE Respuesta.first.emplace\_back($A'_n, B_{k+1}+\ldots+B_m$)
+                \STATE Respuesta.first = Respuesta.first $\cup$ Respuesta'.first
+                \STATE Respuesta.second = Respuesta'.second
+            \ENDIF
+        \ENDFOR
+        \STATE
+        \STATE {$B_* = B \setminus B'_m$} \COMMENT{Le quitamos el último bloque a $B$}
+        \FOR{\text{k = 1 \textbf{to} n - 1}}
+            \STATE {$A_* = A'_{1\ldots k}$} \COMMENT{Agarramos los primeros $k$ bloques}
+            \STATE {Respuesta' $\gets$ {\textsc{MIN-MATCHING}$(A_*, B_*)$}
+            \STATE {Respuesta'.second $\gets$ Respuesta'.second + $\frac{A'_{k+1}+\ldots +A'_{n}}{B'_m}$}}
+            \IF {$min >$ Respuesta'.second}
+                \STATE Respuesta.first.clear()
+                \STATE Respuesta.first.emplace\_back($A'_{k+1} + \ldots + A'_n, B'_m$)
+                \STATE Respuesta.first = Respuesta.first $\cup$  Respuesta'.first
+                \STATE Respuesta.second = Respuesta'.second
+            \ENDIF
+        \ENDFOR
+        \STATE
+        \RETURN Respuesta
+\end{algorithmic}
+
+\subsection*{Análisis de Tiempo}
+
+El tiempo del algoritmo viene dado por la siguiente relación de recurrencia:
+
+\begin{equation*}
+    T(n, m) =
+    \begin{cases}
+        m + k_1 & \text{si } n = 1 \text{ y } m > 1\\\\
+        n + k_2 & \text{si } m = 1 \text{ y } n > 1\\\\
+        k_3 & \text{si } m = 1 \text{ y } n = 1\\\\
+        \sum_{k = 2}^{m-1} {T(n-1, k)} + \sum_{k = 2}^{n-1} {T(k, m-1)} & \text{caso contrario}\\\\
+    \end{cases}
+\end{equation*}
+
+Ahora demostremos que $T(n,m) = \Omega(2^{\max\{n,m\}}).$\\\\
+
+En el caso base tenemos que $n = 1$ y $m = 1$:
+
+\begin{equation*}
+    k_3 \geq c\text{ }2^{\max\{1,1\}}\\\\
+\end{equation*}
+
+Si $c = \dfrac{k_3}{2}$ tenemos que:
+
+\begin{equation*}
+    k_3 \geq k_3
+\end{equation*}
+
+Por lo tanto, el caso base cumple. Ahora veamos el caso inductivo:
+
+\begin{equation*}
+    T(n,m) \geq c\text{ }2^{\max\{n,m\}}
+\end{equation*}
+
+T(n,m) es:
+
+\begin{equation*}
+    T(n,m) = \sum_{k = 2}^{m-1} {T(n-1, k)} + \sum_{k = 2}^{n-1} {T(k, m-1)}
+\end{equation*}
+
+Le quitamos una sumatoria, la desigualdad se mantiene:
+
+\begin{equation*}
+    T(n,m) \geq \sum_{k = 2}^{m-1} {T(n-1, k)}
+\end{equation*}
+
+Agarramos el último término de la sumatoria:
+
+\begin{equation*}
+    T(n,m) \geq T(n-1,m-1)
+\end{equation*}
+
+Por hip\'otesis inductiva tenemos que:
+\begin{equation*}
+   T(n-1,m-1) \geq c\text{ }2^{\max\{n-1,m-1\}}
+\end{equation*}
+
+Le sumamos 1 a $n$ y $m$:
+
+\begin{equation*}
+    T(n, m) \geq c\text{ }2^{\max\{n,m\}-1}
+\end{equation*}
+
+Por lo tanto, si $c = \dfrac{1}{2}$:
+
+\begin{equation*}
+    T(n, m) = \Omega(2^{\max\{n,m\}})
+\end{equation*}
+
+\newpage
+
+\section{Memoizado}
+
+\textbf{Analice, diseñe e implemente un algoritmo memoizado para el problema \textsc{MIN-MATCHING}. Su algoritmo deberá encontrar el matching de peso minimo.}\\
+
+\begin{algorithmic}[1]
+    \REQUIRE Dos arreglos $A$ y $B$ de ceros y unos, de tamaño $p$ con $n$ y $m$ bloques, respectivamente.
+    \ENSURE Un matching entre $A$ y $B$, de peso mínimo, y su peso. \newline \newline
+    \TITLE {\textbf{\textsc{MIN-MATCHING}$(A,B)$:}}
+        \STATE Sea $A'$ el arreglo con los bloques de $A$ con $n$ bloques.
+        \STATE Sea $B'$ el arreglo con los bloques de $B$ con $m$ bloques
+        \STATE Sea $X$ el vector de las conexiones que se van a realizar entre $A'$ y $B'$.
+        \STATE Sea $Respuesta$ un $pair<vector, float>$ que contiene X y el peso.
+        \STATE Sea $M$ una matriz declarada globalmente que contiene las $Respuestas$.
+        \IF {$M[n][m]$ != $\infty$}
+            \RETURN $M[n][m]$
+        \ENDIF
+        \STATE
+        \IF {$n$ == 1 \AND $m$ == 1}
+            \IF {$M[1][1] == \infty$}
+                \STATE Respuesta'.first.emplace\_back(0, 0)
+                \STATE Respuesta'.second = $\dfrac{A'_1}{B'_1}$
+                \STATE {$M[1][1] =$ Respuesta'}
+            \ENDIF
+            \RETURN $M[1][1]$
+        \ENDIF
+        \STATE
+        \IF {$m$ == 1}
+            \IF {$M[n][1] == \infty$}
+                \STATE Respuesta'.first.emplace\_back($A'_1+A'_2+\ldots +A'_n, B'_1$)
+                \STATE Respuesta'.second = $\dfrac{A'_1+A'_2+\ldots +A'_n}{B'_1}$
+                \STATE {$M[n][1] =$ Respuesta'}
+            \ENDIF
+            \RETURN $M[n][1]$
+        \ENDIF
+        \STATE
+        \IF {$n$ == 1}
+            \IF {$M[1][n] == \infty$}
+                \STATE Respuesta'.first.emplace\_back($A'_1, B'_1+B'_2+\ldots +B'_m$)
+                \STATE Respuesta'.second = $\dfrac{A'_1}{B'_1+B'_2+\ldots +B'_m}$
+                \STATE {$M[1][n] =$ Respuesta'}
+            \ENDIF
+            \RETURN $M[1][n]$
+        \ENDIF
+        \STATE
+        \STATE {$min\gets{\infty}$}
+        \STATE {$A_* = A \setminus A'_n$} \COMMENT{Le quitamos el último bloque a $A$}
+        \FOR{\text{k = m - 1 \textbf{downto} 1}}
+            \STATE {$B_* = B'_{1\ldots k}$} \COMMENT{Agarramos los primeros $k$ bloques}
+            \STATE Sea $n_*$ y $m_*$ el número de bloques en $A_*$ y $B_*$, respectivamente.
+            \IF {$M[n_*][m_*]$ != $\infty$}
+                \STATE {Respuesta' = $M[n_*][m_*]$}
+                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_n, B_{k+1}+\ldots+B_m$)
+                \STATE Respuesta'.second += $\frac{A_n}{B_{k+1}+\ldots+B_m}$
+            \ELSE
+                \STATE Respuesta' = {\textsc{MIN-MATCHING}$(A_*, B_*)$}
+                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_n, B_{k+1}+\ldots+B_m$)
+                \STATE Respuesta'.second += $\frac{A_n}{B_{k+1}+\ldots+B_m}$
+            \ENDIF
+            \IF {$min >$ Respuesta'.second}
+                \STATE Respuesta = Respuesta'
+            \ENDIF
+        \ENDFOR
+        \STATE
+        \STATE {$B_* = B \setminus B'_m$} \COMMENT{Le quitamos el último bloque a $B$}
+        \FOR{\text{k = 1 \textbf{to} n - 1}}
+            \STATE {$A_* = A'_{1\ldots k}$} \COMMENT{Agarramos los primeros $k$ bloques}
+            \STATE Sea $n_*$ y $m_*$ el número de bloques en $A_*$ y $B_*$, respectivamente.
+            \IF {$M[n_*][m_*]$ != $\infty$}
+                \STATE {Respuesta' = $M[n_*][m_*]$}
+                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_{k+1} + \ldots + A_n, B_m$)
+                \STATE Respuesta'.second += $\frac{A_n}{B_{k+1}+\ldots+B_m}$
+            \ELSE
+                \STATE Respuesta' = {\textsc{MIN-MATCHING}$(A_*, B_*)$}
+                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_{k+1} + \ldots + A_n, B_m$)
+                \STATE Respuesta'.second += $\frac{A_{k+1} + \ldots + A_n}{B_m}$
+            \ENDIF
+            \IF {$min >$ Respuesta'.second}
+                \STATE Respuesta = Respuesta'
+            \ENDIF
+        \ENDFOR
+        \STATE
+        \RETURN Respuesta
+\end{algorithmic}
+
+\subsection*{Análisis de Tiempo}
+
+En este caso, cada vez que calculamos el peso mínimo de una combinación en especial, la guardamos en su lugar correspondiente en la matriz de memoización para que siguientes llamadas recursivas con los mismos parámetros solo agarren el valor de la matriz, de tal manera, tenemos un acceso en $O(1)$ para resultados memoizados. Como cada llamada recursiva siempre estará dentro de los límites $n$ y $m$ de la matriz de memoización, cada celda será calculada como máximo, una vez. Por lo tanto, tenemos que en el peor caso, llenaremos todas las celdas de la matriz, teniendo un total de $n$ \mathcal{x} $m$ accesos a la matriz. Por ello, podemos concluir que el algoritmo memoizado corre en $O(mn)$.
+
+\section*{Implementación}
+
+La implementación del algoritmo Greedy, Recursivo y Memoizado, se encuentra en el siguiente repositorio:
+
+\begin{itemize}
+    \item \url{https://github.com/MenuMarino/Proyecto-ADA}
+\end{itemize}
+
+\newpage
+
+\begin{comment}
+
+\section{Programación Dinámica}
+
+\textbf{Analice, diseñe e implemente un algoritmo de programaci\'on din\'amica para el problema \textsc{Min-Matching}. Su algoritmo deber\'a encontrar el matching de peso m\'inimo.}\\
+
+\begin{algorithmic}[1]
+    \REQUIRE Dos arreglos $A$ y $B$ de ceros y unos, de tamaño $p$ con $n$ y $m$ bloques, respectivamente.
+    \ENSURE Un matching entre $A$ y $B$, de peso mínimo, y su peso. \newline \newline
+    \TITLE {\textbf{\textsc{MIN-MATCHING}$(A,B)$:}}
+        \STATE Sea $A'$ el arreglo con los bloques de $A$ con $n$ bloques.
+        \STATE Sea $B'$ el arreglo con los bloques de $B$ con $m$ bloques
+        \STATE Sea $X$ el vector de las conexiones que se van a realizar entre $A'$ y $B'$.
+        \STATE Sea $Respuesta$ un $pair<vector, float>$ que contiene X y el peso.
+        \STATE Sea $M$ una matriz declarada globalmente que contiene las $Respuestas$.
+        \STATE {$sum \gets 0$}
+        \FOR{i = 1 \textbf{to} n}
+            \STATE {$sum \gets sum + A_i$}
+            \STATE {M[i][1] = $\dfrac{sum}{B_1}$}
+        \ENDFOR
+        \STATE
+        \STATE {$sum \gets 0$}
+        \FOR{\text{j = 1 \textbf{to} m}}
+            \STATE {$sum \gets sum + B_j$}
+            \STATE {M[1][j] = $\dfrac{A_1}{sum}$}
+        \ENDFOR
+        \STATE
+        \STATE {$min_1 \gets \infty$}
+        \STATE {$min_2 \gets \infty$}
+        \STATE
+        \STATE {$sum_1 \gets 0$}
+        \STATE {$sum_2 \gets 0$}
+        \STATE
+        \STATE {$weight_1 \gets 0$}
+        \STATE {$weight_2 \gets 0$}
+        \STATE
+        \FOR{\text{i = 2 \textbf{to} n}}
+            \FOR{\text{j = 2 \textbf{to} m}}
+                \FOR{\text{k = j-1 \textbf{to} 1}}
+                    \FOR{\text{a = k+1 \textbf{to} j}}
+                        \STATE {$sum_1 \gets B_a$}
+                    \ENDFOR
+                    \STATE {$weight_1 \gets M[i-1][k] + \dfrac{A_i}{sum_1}$}
+                    \IF {$weight_1 < min_1$}
+                        \STATE {$min_1 \gets weight_1$}
+                    \ENDIF
+                \ENDFOR
+                \FOR{\text{k = 1 \textbf{to} i-1}}
+                    \FOR{\text{a = k+1 \textbf{to} i}}                      
+                    \STATE {$sum_2 \gets A_a$}
+                    \ENDFOR
+                    \STATE {$weight_2 \gets M[k][j-1] + \dfrac{sum_2}{B_j}$}
+                    \IF {$weight_2 < min_2$}
+                        \STATE {$min_2 \gets weight_2$}
+                    \ENDIF 
+                \ENDFOR
+                \STATE
+                \IF {$min_1 < min_2$} 
+                    \STATE {$M[i][j] \gets min_1$}
+                \ELSIF {$min_2 < min_1$}
+                    \STATE {$M[i][j] \gets min_2$}
+                \ELSE
+                    \STATE {$M[i][j] \gets min_2$}
+                \ENDIF
+            \ENDFOR
+        \ENDFOR
+        \RETURN {$M[n][m]$}
+\end{algorithmic}
+
+\subsection*{Análisis de Tiempo}
+
+\begin{equation*}
+    T(n, m) =
+    \begin{cases}
+        m + k_1 & \text{si } n = 1 \text{ y } m > 1\\\\
+        n + k_2 & \text{si } m = 1 \text{ y } n > 1\\\\
+        k_3 & \text{si } m = 1 \text{ y } n = 1\\\\
+        n + m + k_4 + m * n * k_5 & \text{caso contrario}\\
+    \end{cases}
+\end{equation*}
+
+\section{Transformación Voraz}
+
+\textbf{Analice, diseñe e implemente un algoritmo voraz con complejidad cuadrática para el problema \textsc{MIN-TRANSFORMACION}. Su algoritmo no necesariamente deberá encontrar la transformación de peso mínimo. Debe usar como subrutina al algoritmo implementado en la Pregunta 1.} \\
+
+\begin{algorithmic}[1]
+    \textit{Entrada del algoritmo:} Dos matrices $A$ y $B$ de ceros y unos de tamaño $p$ \mathcal{x} $q$.\newline
+    \textit{Salida del algoritmo:} Un transformación entre $A$ y $B$, no necesariamente óptima, y su peso.\newline
+    \textit{Tiempo de ejecuci\'on del algoritmo:} $O(pq)$.\newline
+\end{algorithmic}
+
+\section{Transformación Programación Dinámica}
+
+\textbf{Analice, diseñe e implemente un algoritmo de programación dinámica con complejidad cúbica para el problema \textsc{MIN-TRANSFORMACION}. Su algoritmo deberá devolver una transformación de peso mínimo. Debe usar como subrutina al algoritmo implementado en el Pregunta 5.} \\
+
+\begin{algorithmic}[1]
+    \textit{Entrada del algoritmo:} Dos matrices $A$ y $B$ de ceros y unos de tamaño $p$ \mathcal{x} $q$.\newline
+    \textit{Salida del algoritmo:} Una transformación óptima entre $A$ y $B$, y su peso.\newline
+    \textit{Tiempo de ejecuci\'on del algoritmo:} $O(pq^{2})$.\newline
+\end{algorithmic}
+
+\section{Lectura de im\'agenes}
+\textbf{Implementar una funci\'on de lectura de im\'agenes. Deber\'a recibir como entrada una imagen y devolver una matriz de 0s y 1s que codifica a la imagen le\'ida. Esta funci\'on deber\'a ser lo suficientemente flexible (recibir tres par\'ametros adicionales) para poder usar uno u otro m\'etodo de transformaci\'on. As\'i tambi\'en, deber\'ia ser flexible para decidir cual es el umbral que decide si se transforma a 0 o a 1.} \newline
+\textbf{Finalmente, haremos una animaci\'on que ejemplifica una transformaci\'on de una imagen en
+otra. Para ello debemos analizar cada matching encontrado en la soluci\'on. Si en el matching
+entre A[i] y B[i] hay una divisi\'on, entonces es razonable que el bloque correspondiente en
+A[i] se divida en subloques proporcionales a los tamaños de los bloques correspondientes en
+B[i]. Por ejemplo, si un bloque, de tamaño 14 mediante una divisi\'on termina en tres bloques
+de tamaño 10, 20, y 5. Entonces dicho bloque ser\'a dividido en subloques de 4, 8, 2, cada uno
+de los cuales se ir\'a transformando progresivamente en su correspondiente bloque en B[i].
+Un razonamiento an\'alogo occurre en el caso de una agrupaci\'on.}
+
+\section{Animaci\'on}
+\textbf{Implementar una animaci\'on para transformar im\'agenes. Deber\'a recibir como entrada dos im\'agenes y mostrar una animaci\'on que transforma la primera
+imagen en la segunda. Aunque internamente se trabaje con matrices de ceros y unos, esta
+animaci\'on deber\'a mostrar la transformaci\'on en colores.} \newline
+\textbf{Esta funci\'on deber\'a recibir adicionalmente un par\'ametro toma en cuenta el algoritmo a
+utilizar:}
+
+\begin{itemize}
+    \item Utiliza la subrutina implementada en la pregunta 6 (Voraz).
+    \item Utiliza la subrutina implementada en la pregunta 7 (Prog. Din\'amica).
+    \item Utiliza la subrutina implementada en la pregunta 10 (Prog. Din\'amica Mejorada).
+\end{itemize}
+\newline
+
+\textbf{La subrutina mejorada (item 3) es descrita a continuaci\'on. Una mejor medida de la
+distorsi\'on entre dos vectores de pixels, es decir el peso de un matching, viene dado por la
+varianza. Sean $a_1, a_2,\ldots,a_m$ los tamaños de los bloques de un arreglo $A[x]$. Sean $b_1, b_2, \ldots, b_n$ los tamaños de los bloques de un arreglo $B[x]$. Sea $\sum_{i=1}^{n} a_i / \sum_{i=1}^{m} b_i$. Si $D$ es una divisi\'on o agrupaci\'on en un matching entre $A[x]$ y $B[x]$, el \textit{peso promedio} asociado a dicha divisi\'on o agrupaci\'on, denotado por $\bar{w}(D)$ es} \newline
+\begin{equation*}
+    \bar{w}(D) = |w(D) - \mu|.
+\end{equation*}
+\textbf{An\'alogamente, el peso promedio de un matching $M$, denotado por $\bar{w}(M)$ es definido como la suma de los pesos promedios de las agrupaciones y las divisiones en $M$.}
+
+\bar{w}
+
+\section{Transformación Programación Dinámica Mejorada}
+
+\textbf{Analice, diseñe e implemente un algoritmo de programación dinámica con complejidad cúbica para el problema \textsc{MIN-MATCHING}. Su algoritmo deberá devolver la transformación de peso \textit{promedio} mínimo. Deberá usar como subrutina un algoritmo que encuentre el peso promedio mínimo de un matching.} \\
+
+\begin{algorithmic}[1]
+    \textit{Entrada del algoritmo:} Dos matrices $A$ y $B$ de ceros y unos de tamaño $p$ \mathcal{x} $q$.\newline
+    \textit{Salida del algoritmo:} Una transformación óptima entre $A$ y $B$, y su peso.\newline
+    \textit{Tiempo de ejecuci\'on del algoritmo:} $O(pq^{2})$.\newline
+\end{algorithmic}
+
+\end{comment}
+
+\end{document}
