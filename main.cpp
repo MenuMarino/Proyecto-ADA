@@ -31,7 +31,7 @@ int main() {
             cout << "Array de B" << endl;
             for (int i = 0; i < m; ++i) {
                 cin >> x;
-                A.push_back(x);
+                B.push_back(x);
             }
 
             auto minMatch = new MinMatch(A, B);
@@ -69,6 +69,6 @@ int main() {
         default:
             break;
     }
-    
+
     return 0;
 }
