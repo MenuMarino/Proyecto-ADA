@@ -10,7 +10,7 @@ int main() {
     vector<int> B;
 
     do {
-        cout << "Ingresar arrays (1) o usar arrays por defecto (2): ";
+        cout << "Ingresar arrays (1) o usar arrays (2): ";
         cin >> respuesta;
     } while (respuesta < 1 || respuesta > 2);
 
@@ -50,7 +50,7 @@ int main() {
              *  Convierte el archivo numbers.txt (1 0 0 1 1 1 0 1 0) a
              *  numberscomma.txt (1,0,0,1,1,1,0,1,0)
              */
-            
+
             A = {0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1,
                  1, 1,
                  0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1};
