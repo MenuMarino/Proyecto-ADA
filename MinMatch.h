@@ -283,6 +283,7 @@ private:
             vector<pair <int, int>> tmpA;
 
             for (int auxK = k; auxK < m; ++auxK) {
+                //TODO: Matriz de sumas
                 auxDen += b[auxK];
                 tmpA.emplace_back(n-1, auxK);
             }
