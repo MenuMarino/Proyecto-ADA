@@ -9,7 +9,6 @@ int main() {
     vector<int> A;
     vector<int> B;
 
-    //TODO: Ingresar un string (0010101010101) que lo parsee y ya
     do {
         cout << "Ingresar arrays (1) o usar arrays (2): ";
         cin >> respuesta;
@@ -17,23 +16,28 @@ int main() {
 
     switch (respuesta) {
         case 1: {
-            int n, m, x;
-            cout << "Ingresar tamaño de A: ";
-            cin >> n;
-            cout << "Ingresar tamaño de B: ";
-            cin >> m;
+			string a;
+			string b;
 
-            cout << "Array de A" << endl;
-            for (int i = 0; i < n; ++i) {
-                cin >> x;
-                A.push_back(x);
-            }
+			cout << "Ingrese el array A (0101010101): "; cin >> a;
+			cout << "Ingrese el array B (1101101101): "; cin >> b;
+			
+			for (int i = 0; i < a.length(); ++i) {
+				if (a[i] != '1' && a[i] != '0') {
+					cout << "Valor invalido!" << endl;
+					exit(-1);
+				}
+					
+				A.push_back( (int) a[i] - 48);
+			}
 
-            cout << "Array de B" << endl;
-            for (int i = 0; i < m; ++i) {
-                cin >> x;
-                B.push_back(x);
-            }
+			for (int i = 0; i < b.length(); ++i) {
+				if (b[i] != '1' && b[i] != '0') {
+                    cout << "Valor invalido!" << endl;
+                    exit(-1);
+                }
+				B.push_back( (int) b[i] - 48);
+			}
 
             auto minMatch = new MinMatch(A, B);
 
