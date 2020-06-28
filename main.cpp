@@ -8,13 +8,16 @@ int main() {
     int respuesta;
     vector<int> A;
     vector<int> B;
+    vector< vector<int> > matrizA;
+    vector< vector<int> > matrizB;
 
     do {
-        cout << "Ingresar arrays (1) o usar arrays (2): ";
+        cout << "Ingresar arrays y matrices (1) o usar arrays y matrices (2):";
         cin >> respuesta;
     } while (respuesta < 1 || respuesta > 2);
 
     switch (respuesta) {
+        //TODO: Input de matrices
         case 1: {
 			string a;
 			string b;
@@ -22,21 +25,21 @@ int main() {
 			cout << "Ingrese el array A (0101010101): "; cin >> a;
 			cout << "Ingrese el array B (1101101101): "; cin >> b;
 			
-			for (int i = 0; i < a.length(); ++i) {
-				if (a[i] != '1' && a[i] != '0') {
+			for (char i : a) {
+				if (i != '1' && i != '0') {
 					cout << "Valor invalido!" << endl;
 					exit(-1);
 				}
 					
-				A.push_back( (int) a[i] - 48);
+				A.push_back( (int) i - 48);
 			}
 
-			for (int i = 0; i < b.length(); ++i) {
-				if (b[i] != '1' && b[i] != '0') {
+			for (char i : b) {
+				if (i != '1' && i != '0') {
                     cout << "Valor invalido!" << endl;
                     exit(-1);
                 }
-				B.push_back( (int) b[i] - 48);
+				B.push_back( (int) i - 48);
 			}
 
             auto minMatch = new MinMatch(A, B);
@@ -44,27 +47,29 @@ int main() {
             minMatch->greedy();
             minMatch->recursivo();
             minMatch->memoizado();
+            minMatch->dinamico();
 
             delete (minMatch);
             break;
         }
         case 2: {
+            ///Matrices
+            matrizA = { {0,1,1,1}, {1,1,1,1}, {1,0,1,1}, {1,0,1,0} };
+            matrizB = { {1,1,1,1}, {1,1,0,1}, {1,0,1,0}, {0,0,1,0} };
+
             ///Vectores
+            A = {1,1,1,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0,0};
+            B = {0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1};
+
+            auto minMatch = new MinMatch(A, B, matrizA, matrizB);
+            minMatch->dinamicoM();
             /*
-             *  awk '{gsub(/( )+/,",")}1' numbers.txt > numberscomma.txt
-             *  Convierte el archivo numbers.txt (1 0 0 1 1 1 0 1 0) a
-             *  numberscomma.txt (1,0,0,1,1,1,0,1,0)
-             */
-
-            A = {1,1,1,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0,0,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1};
-            B = {0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0};
-
-            auto minMatch = new MinMatch(A, B);
             ///Algoritmos
             minMatch->greedy();
-            minMatch->recursivo();
+            //minMatch->recursivo();
             minMatch->memoizado();
-
+            minMatch->dinamico();
+            */
             delete (minMatch);
         }
         default:

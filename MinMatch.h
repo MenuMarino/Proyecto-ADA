@@ -19,6 +19,13 @@ private:
     ///Vectores de pesos
     vector<float> pesosA;
     vector<float> pesosB;
+    ///Matrices de 1s y 0s
+    vector< vector<int> > matrizA;
+    vector< vector<int> > matrizB;
+    ///Matriz de pesos
+    vector< vector<float> > pesosMA;
+    vector< vector<float> > pesosMB;
+
     ///Matriz utilizadad por el algoritmo memoizado y el de programacion dinamica
     pair< vector< pair<int, int> > , float >** Matrix = nullptr;
 
@@ -34,6 +41,72 @@ public:
             B.push_back(i);
         }
 
+        setPesos();
+    }
+
+    MinMatch(const vector< vector<int> >& _A, const vector< vector<int> >& _B) {
+        matrizA.resize(_A.size());
+        for (int i = 0; i < _A.size(); ++i) {
+            matrizA[i].resize(_A[i].size());
+            for (int j = 0; j < _A[i].size(); ++j) {
+                matrizA[i][j] = _A[i][j];
+            }
+        }
+
+        matrizB.resize(_B.size());
+        for (int i = 0; i < _B.size(); ++i) {
+            matrizB[i].resize(_B[i].size());
+            for (int j = 0; j < _B[i].size(); ++j) {
+                matrizB[i][j] = _B[i][j];
+            }
+        }
+
+        setPesosM();
+
+        for (auto & i : pesosMA) {
+            for (float j : i) {
+                cout << j << " ";
+            }
+            cout << endl;
+        }
+
+        cout << "Fin" << endl;
+
+        for (auto & i : pesosMB) {
+            for (float j : i) {
+                cout << j << " ";
+            }
+            cout << endl;
+        }
+
+    }
+
+    MinMatch(const vector<int>& _A, const vector<int>& _B, const vector< vector<int> >& __A, const vector< vector<int> >& __B) {
+        for (int i : _A) {
+            A.push_back(i);
+        }
+
+        for (int i : _B) {
+            B.push_back(i);
+        }
+
+        matrizA.resize(__A.size());
+        for (int i = 0; i < __A.size(); ++i) {
+            matrizA[i].resize(__A[i].size());
+            for (int j = 0; j < __A[i].size(); ++j) {
+                matrizA[i][j] = __A[i][j];
+            }
+        }
+
+        matrizB.resize(__B.size());
+        for (int i = 0; i < __B.size(); ++i) {
+            matrizB[i].resize(__B[i].size());
+            for (int j = 0; j < __B[i].size(); ++j) {
+                matrizB[i][j] = __B[i][j];
+            }
+        }
+
+        setPesosM();
         setPesos();
     }
 
@@ -135,6 +208,48 @@ public:
         borrarMatriz();
 
         return respuesta;
+    }
+
+    vector < pair< vector< pair<int, int> > , float > > dinamicoM() {
+        ///Medir tiempo
+        unsigned t0, t1;
+
+        ///Llenar la matriz de infinito
+        Matrix = crearMatriz();
+
+        vector < pair< vector< pair<int, int> > , float > > Vrespuesta;
+        pair< vector< pair<int, int> > , float > respuesta;
+
+        ///Respuesta.first contiene el matching, respuesta.second contiene el peso minimo.
+        t0 = clock();
+        for (int i = 0; i < matrizA.size(); ++i) {
+            Matrix = crearMatriz();
+            respuesta = algoritmoDinamico(pesosMA[i], pesosMB[i]);
+            Vrespuesta.push_back(respuesta);
+        }
+        t1 = clock();
+
+        cout << "\nTransformacion dinamica. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC);
+
+        //TODO: Print bellaco
+        float totalSum = 0;
+        for (auto & i : Vrespuesta) {
+            totalSum += i.second;
+        }
+
+        cout << "\nEl peso es: " << totalSum << "\nEl matching es: " << endl;
+
+        for (int i = 0; i < Vrespuesta.size(); ++i) {
+            for (int j = 0; j < Vrespuesta[i].first.size(); ++j) {
+                cout << Vrespuesta[i].first[j].first << " " << Vrespuesta[i].first[j].second << " | ";
+            }
+            cout << "\n\n";
+        }
+
+        ///Limpiar la matriz
+        borrarMatriz();
+
+        return Vrespuesta;
     }
 
     //Destructor
@@ -469,23 +584,23 @@ private:
         ///Caso cuando j = 1
         vector< pair<int, int> > helper;
         helper.emplace_back(0,0);
-        float pesoAux = pesosA[0];
+        float pesoAux = a[0];
         for (int i = 1; i < n; ++i) {
-            pesoAux += pesosA[i];
+            pesoAux += a[i];
             helper.emplace_back(i, 0);
             Matrix[i][0].first = helper;
-            Matrix[i][0].second = pesoAux / pesosB[0];
+            Matrix[i][0].second = pesoAux / b[0];
         }
 
         ///Caso cuando i = 1
         helper.clear();
         helper.emplace_back(0,0);
-        pesoAux = pesosB[0];
+        pesoAux = b[0];
         for (int j = 1; j < m; ++j) {
-            pesoAux += pesosB[j];
+            pesoAux += b[j];
             helper.emplace_back(0, j);
             Matrix[0][j].first = helper;
-            Matrix[0][j].second = pesosA[0] / pesoAux;
+            Matrix[0][j].second = a[0] / pesoAux;
         }
         ///Fin de casos base
 
@@ -507,11 +622,11 @@ private:
                     sum = 0;
                     helper.clear();
                     for (int l = k + 1; l <= j; ++l) {
-                        sum += pesosB[l];
+                        sum += b[l];
                         helper.emplace_back(i,l);
                     }
                     auto aux = Matrix[i-1][k];
-                    weight = aux.second + (pesosA[i] / sum);
+                    weight = aux.second + (a[i] / sum);
 
                     if (weight < _min) {
                         tmp.clear();
@@ -531,11 +646,11 @@ private:
                     sum = 0;
                     helper.clear();
                     for (int l = k + 1; l <= i; ++l) {
-                        sum += pesosA[l];
+                        sum += a[l];
                         helper.emplace_back(l,j);
                     }
                     auto aux = Matrix[k][j-1];
-                    weight = aux.second + (sum / pesosB[j]);
+                    weight = aux.second + (sum / b[j]);
 
                     if (weight < _min) {
                         tmp.clear();
@@ -552,7 +667,7 @@ private:
                 helper.clear();
                 ///Conexion 1 a 1 (A[i] y B[i])
                 auto aux = Matrix[i-1][j-1];
-                weight = (pesosA[i] / pesosB[j]) + aux.second;
+                weight = (a[i] / b[j]) + aux.second;
                 if (weight < _min) {
                     tmp.clear();
                     for (auto & q : aux.first) {
@@ -610,6 +725,64 @@ private:
         }
     }
 
+    void setPesosM(){
+        int temp = 0;
+        bool enabled = false;
+        int i;
+
+        ///Contar los bloques de A
+        vector <float> tmpA;
+        pesosMA.resize(matrizA.size());
+        for (i = 0; i < matrizA.size(); ++i) {
+            tmpA.clear();
+            temp = 0;
+            for (int j = 0; j < matrizA[i].size(); ++j) {
+                if (matrizA[i][j] == 1) {
+                    enabled = true;
+                    ++temp;
+                    if (j == matrizA[i].size() - 1) {
+                        tmpA.push_back(temp);
+                    }
+                } else if (enabled) {
+                    enabled = false;
+                    tmpA.push_back(temp);
+                    temp = 0;
+                }
+            }
+            pesosMA[i].resize(tmpA.size());
+            for (int x = 0; x < tmpA.size(); ++x) {
+                pesosMA[i][x] = tmpA[x];
+            }
+        }
+
+        ///Contar los bloques de B
+        vector <float> tmpB;
+        pesosMB.resize(matrizB.size());
+        enabled = false;
+        temp = 0;
+        for (i = 0; i < matrizB.size(); ++i) {
+            tmpB.clear();
+            temp = 0;
+            for (int j = 0; j < matrizB[i].size(); ++j) {
+                if (matrizB[i][j] == 1) {
+                    enabled = true;
+                    ++temp;
+                    if (j == matrizB.size() - 1) {
+                        tmpB.push_back(temp);
+                    }
+                } else if (enabled) {
+                    enabled = false;
+                    tmpB.push_back(temp);
+                    temp = 0;
+                }
+            }
+            pesosMB[i].resize(tmpB.size());
+            for (int x = 0; x < tmpB.size(); ++x) {
+                pesosMB[i][x] = tmpB[x];
+            }
+        }
+    }
+
     pair< vector< pair<int, int> > , float >** crearMatriz() {
         pair< vector< pair<int, int> > , float >** array2D = nullptr;
         int N = pesosA.size();
@@ -638,5 +811,7 @@ private:
     }
 };
 
+
+class value;
 
 #endif //PROYECTO_MINMATCH_H
