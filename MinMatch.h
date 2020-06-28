@@ -139,6 +139,42 @@ public:
         return respuesta;
     }
 
+    vector<pair< vector< pair< vector<int>, vector<int> > >, float >> greedyMatriz() {
+        ///Medir tiempo
+        unsigned t0, t1;
+
+        ///Respuesta.first contiene el matching (en un vector de pairs), respuesta.second contiene el peso minimo.
+        t0 = clock();
+        vector<pair< vector< pair< vector<int>, vector<int> > >, float >> respuesta = algoritmoGreedyMatriz(pesosMA, pesosMB);
+        t1 = clock();
+        float cont=0;
+        cout <<endl<< "Algoritmo greedy. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC) << " segundos." << endl;
+
+        for(int b=0; b < respuesta.size(); ++b) {
+            cout <<endl << endl << "Matching " << b << " de las matrices" << endl;
+            cout << "El peso es: " << respuesta[b].second << "\nEl matching es: ";
+            cont += respuesta[b].second;
+            cout << endl << "__________________________" << endl;
+            for (int i = 0; i < respuesta[b].first.size(); ++i) {
+
+                cout << "C" << i + 1 << " Indices(s) en A': ";
+                for (int j = 0; j < respuesta[b].first[i].first.size(); ++j) {
+                    cout << respuesta[b].first[i].first[j] << " ";
+                }
+                cout << endl << endl;
+                cout << "C" << i + 1 << " Indices(s) en B': ";
+                for (int k = 0; k < respuesta[b].first[i].second.size(); ++k) {
+                    cout << respuesta[b].first[i].second[k] << " ";
+                }
+                cout << endl << "__________________________" << endl;
+            }
+        }
+
+        cout << endl << endl << "El peso del matching matricial es: " << cont << endl;
+
+        return respuesta;
+    }
+
     pair< vector< pair<int, int> > , float > recursivo() {
         ///Medir tiempo
         unsigned t0, t1;
@@ -231,7 +267,7 @@ public:
 
         cout << "\nTransformacion dinamica. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC);
 
-        //TODO: Print bellaco
+
         float totalSum = 0;
         for (auto & i : Vrespuesta) {
             totalSum += i.second;
@@ -257,6 +293,17 @@ public:
 
 private:
     ///Metodos importantes
+    vector<pair< vector< pair< vector<int>, vector<int> > >, float >> algoritmoGreedyMatriz(vector<vector<float>>a, vector<vector<float>>b){
+
+        vector<pair< vector< pair< vector<int>, vector<int> > >, float >> aux;
+
+        for(int i=0; i < a.size(); ++i){
+            aux.push_back(algoritmoGreedy(a[i], b[i]));
+        }
+
+        return aux;
+    }
+
      pair< vector< pair< vector<int>, vector<int> > >, float > algoritmoGreedy(vector<float> a, vector<float> b){
 
         vector< pair< vector<int>, vector<int> > > R;
