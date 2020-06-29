@@ -6,9 +6,9 @@
 using namespace std;
 
 int main() {
-
+/*
     MatrixTransformer matrixTransformer = MatrixTransformer(
-            "/Users/gabrielspranger/Desktop/OpenCV/Pregunta8/yo-1.png",
+            "/Users/benjamindiaz/Downloads/UTEC/Ciclo 5/ADA/Proyecto/yo-1.png",
             _709,
             128.0f
     );
@@ -18,12 +18,13 @@ int main() {
     matrixTransformer.print_transformed_img();
 
     matrixTransformer.show_image();
-
+*/
     int respuesta;
     vector<int> A;
     vector<int> B;
     vector< vector<int> > matrizA;
     vector< vector<int> > matrizB;
+    srand(time(NULL));
 
     do {
         cout << "Ingresar arrays y matrices (1) o usar arrays y matrices (2): ";
@@ -31,7 +32,6 @@ int main() {
     } while (respuesta < 1 || respuesta > 2);
 
     switch (respuesta) {
-        //TODO: Input de matrices
         case 1: {
 			string a;
 			string b;
@@ -76,14 +76,8 @@ int main() {
             B = {0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1};
 
             auto minMatch = new MinMatch(A, B, matrizA, matrizB);
-            minMatch->greedyMatriz();
-            /*
-            ///Algoritmos
-            minMatch->greedy();
-            //minMatch->recursivo();
-            minMatch->memoizado();
-            minMatch->dinamico();
-            */
+            minMatch->lecturaDeImagen();
+
             delete (minMatch);
         }
         default:

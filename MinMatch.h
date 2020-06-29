@@ -8,6 +8,7 @@
 #include <iterator>
 #include <ctime>
 #include <fstream>
+#include "MatrixTransformer.h"
 
 using namespace std;
 
@@ -288,8 +289,28 @@ public:
         return Vrespuesta;
     }
 
+    void lecturaDeImagen() {
+        ///Objeto para leer la matriz
+        string path1 = "/Users/benjamindiaz/Downloads/UTEC/Ciclo 5/ADA/Proyecto/yo-1.png";
+        string path2 = "/Users/benjamindiaz/Downloads/UTEC/Ciclo 5/ADA/Proyecto/yo.png";
+        auto imagen1 = new MatrixTransformer(path1, _601, 125);
+        auto imagen2 = new MatrixTransformer(path2, _601, 125);
+
+        imagen1->transform();
+        imagen2->transform();
+        imagen1->print_transformed_img();
+        cout << endl;
+        imagen2->print_transformed_img();
+        imagen1->show_image();
+        imagen2->show_image();
+        waitKey();
+
+        delete(imagen1);
+        delete(imagen2);
+    }
+
     //Destructor
-    ~MinMatch()= default;
+    ~MinMatch() = default;
 
 private:
     ///Metodos importantes
@@ -304,7 +325,7 @@ private:
         return aux;
     }
 
-     pair< vector< pair< vector<int>, vector<int> > >, float > algoritmoGreedy(vector<float> a, vector<float> b){
+    pair< vector< pair< vector<int>, vector<int> > >, float > algoritmoGreedy(vector<float> a, vector<float> b){
 
         vector< pair< vector<int>, vector<int> > > R;
         vector<int> A_aux;
@@ -337,7 +358,7 @@ private:
                 A_aux.push_back(i);
                 valA = float(a[i]);
 
-                while( (valA > valB)   && (j < n-1)){
+                while( (valA > valB) && (j < n-1) ) {
 
                     B_aux.push_back(j);
                     valB += float(b[j]);
@@ -372,12 +393,12 @@ private:
             B_aux.clear();
         }
 
-        while(i < m){
+        while(i < m) {
             A_aux.push_back(i);
             valA += float(a[i]);
             i++;
         }
-        while(j < n){
+        while(j < n) {
             B_aux.push_back(j);
             valB += float(b[j]);
             j++;

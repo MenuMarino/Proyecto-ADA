@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <cinttypes>
+#include <ctime>
+#include <cstdlib>
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
@@ -18,15 +20,15 @@ enum method {
     _240
 };
 
-class MatrixTransformer {
+static size_t instance_number = 0;
 
-    static size_t instance_number;
+class MatrixTransformer {
 
 private:
     method _method;
     Mat img;
     float umbral;
-    vector<vector<bool>> transformed_img = {};
+    vector<vector<char>> transformed_img = {};
 
 public:
     MatrixTransformer() { ++instance_number; }
@@ -36,11 +38,11 @@ public:
     }
 
 private:
-    vector<vector<bool>> apply_transformation(const float coefficients[3]) {
-        vector<vector<bool>> matrix = {};
+    vector<vector<char>> apply_transformation(const float coefficients[3]) {
+        vector<vector<char>> matrix = {};
         float luma;
         for (int r = 0; r < img.rows; ++r) {
-            vector<bool> fila = {};
+            vector<char> fila = {};
             luma = 0.0f;
             for (int c = 0; c < img.cols; ++c) {
                 // [0] blue channel, [1] green channel, [2] red channel
@@ -49,7 +51,11 @@ private:
                 luma += float(img.at<cv::Vec3b>(r, c)[1]) * coefficients[1];
                 luma += float(img.at<cv::Vec3b>(r, c)[2]) * coefficients[2];
                 // si luma < umbral, push 1, sino, push 0
-                fila.push_back(luma < umbral);
+                //fila.push_back(luma < umbral);
+                if (luma < umbral)
+                    fila.push_back('\'');
+                else
+                    fila.push_back('*');
                 luma = 0.0f;
             }
             matrix.push_back(fila);
@@ -59,7 +65,7 @@ private:
 
 public:
     // funcion que transforma una imagen a 0s y 1s
-    vector<vector<bool>> transform() {
+    vector<vector<char>> transform() {
         switch (_method) {
             case _601: {
                 const float __601[3] = {0.114f, 0.587f, 0.299f};
@@ -94,17 +100,13 @@ public:
 
     void show_image() {
         string win_name = "Imagen ";
-        win_name += to_string(instance_number);
+        win_name += to_string(rand()%1000);
         imshow(win_name, img);
-        waitKey();
     }
 
     ~MatrixTransformer() {
         --instance_number;
     }
 };
-
-size_t MatrixTransformer::instance_number = 0;
-
 
 #endif //PROYECTO_MATRIXTRANSFORMER_H

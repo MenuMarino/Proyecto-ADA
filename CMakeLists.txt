@@ -4,7 +4,7 @@ project(Proyecto)
 set(CMAKE_CXX_STANDARD 14)
 set(SRC_FILES main.cpp MinMatch.h MatrixTransformer.h)
 
-include_directories(.)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 find_package(OpenCV REQUIRED)
 add_executable(
