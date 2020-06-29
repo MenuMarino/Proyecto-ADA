@@ -274,7 +274,7 @@ public:
         }
         t1 = clock();
 
-        cout << "\nTransformacion dinamica. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC);
+        cout << "\nTransformacion dinamica mejorada. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC);
 
         float totalSum = 0;
         for (auto & i : Vrespuesta) {
@@ -367,9 +367,9 @@ public:
         cout << "============================================================" << endl;
         imagen2->print_transformed_img();
         cout << endl;
-        //imagen1->show_image();
-        //imagen2->show_image();
-        //waitKey();
+        imagen1->show_image();
+        imagen2->show_image();
+        waitKey();
 
         delete(imagen1);
         delete(imagen2);
