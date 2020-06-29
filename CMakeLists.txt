@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14.5)
 project(Proyecto)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(SRC_FILES main.cpp MinMatch.h MatrixTransformer.h)
 
 include_directories(${OpenCV_INCLUDE_DIRS})

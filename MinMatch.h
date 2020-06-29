@@ -9,6 +9,7 @@
 #include <ctime>
 #include <fstream>
 #include <cmath>
+#include <unistd.h>
 #include "MatrixTransformer.h"
 
 using namespace std;
@@ -355,8 +356,9 @@ public:
 
     void lecturaDeImagen() {
         ///Objeto para leer la matriz
-        string path1 = "/Users/benjamindiaz/Downloads/UTEC/Ciclo 5/ADA/Proyecto/yo-1.png";
-        string path2 = "/Users/benjamindiaz/Downloads/UTEC/Ciclo 5/ADA/Proyecto/yo.png";
+        string pwd = getcwd(NULL, 100);
+        string path1 = pwd + "/../yo-1.png";
+        string path2 = pwd + "/../yo.png";
         auto imagen1 = new MatrixTransformer(path1, _601, 125);
         auto imagen2 = new MatrixTransformer(path2, _601, 125);
 
