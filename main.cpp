@@ -6,19 +6,6 @@
 using namespace std;
 
 int main() {
-/*
-    MatrixTransformer matrixTransformer = MatrixTransformer(
-            "/Users/benjamindiaz/Downloads/UTEC/Ciclo 5/ADA/Proyecto/yo-1.png",
-            _709,
-            128.0f
-    );
-
-    vector<vector<bool>> m = matrixTransformer.transform();
-
-    matrixTransformer.print_transformed_img();
-
-    matrixTransformer.show_image();
-*/
     int respuesta;
     vector<int> A;
     vector<int> B;
@@ -33,18 +20,19 @@ int main() {
 
     switch (respuesta) {
         case 1: {
+            //TODO: Matrices
 			string a;
 			string b;
 
 			cout << "Ingrese el array A (0101010101): "; cin >> a;
 			cout << "Ingrese el array B (1101101101): "; cin >> b;
-			
+
 			for (char i : a) {
 				if (i != '1' && i != '0') {
 					cout << "Valor invalido!" << endl;
 					exit(-1);
 				}
-					
+
 				A.push_back( (int) i - 48);
 			}
 
@@ -56,12 +44,13 @@ int main() {
 				B.push_back( (int) i - 48);
 			}
 
-            auto minMatch = new MinMatch(A, B);
+            ///Leer las matrices
 
-            minMatch->greedy();
-            minMatch->recursivo();
-            minMatch->memoizado();
-            minMatch->dinamico();
+            auto minMatch = new MinMatch(A, B/*matrizA, matrizB*/);
+            /// Cambia las matrices por las imagenes.
+            minMatch->lecturaDeImagen();
+            minMatch->greedyMatriz();
+            minMatch->dinamicoM();
 
             delete (minMatch);
             break;
@@ -76,7 +65,10 @@ int main() {
             B = {0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1};
 
             auto minMatch = new MinMatch(A, B, matrizA, matrizB);
+            /// Cambia las matrices por las imagenes.
             minMatch->lecturaDeImagen();
+            minMatch->greedyMatriz();
+            minMatch->dinamicoM();
 
             delete (minMatch);
         }

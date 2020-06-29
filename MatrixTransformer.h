@@ -28,7 +28,7 @@ private:
     method _method;
     Mat img;
     float umbral;
-    vector<vector<char>> transformed_img = {};
+    vector<vector<int>> transformed_img = {};
 
 public:
     MatrixTransformer() { ++instance_number; }
@@ -38,11 +38,11 @@ public:
     }
 
 private:
-    vector<vector<char>> apply_transformation(const float coefficients[3]) {
-        vector<vector<char>> matrix = {};
+    vector<vector<int>> apply_transformation(const float coefficients[3]) {
+        vector<vector<int>> matrix = {};
         float luma;
         for (int r = 0; r < img.rows; ++r) {
-            vector<char> fila = {};
+            vector<int> fila = {};
             luma = 0.0f;
             for (int c = 0; c < img.cols; ++c) {
                 // [0] blue channel, [1] green channel, [2] red channel
@@ -53,9 +53,9 @@ private:
                 // si luma < umbral, push 1, sino, push 0
                 //fila.push_back(luma < umbral);
                 if (luma < umbral)
-                    fila.push_back('\'');
+                    fila.push_back(1);
                 else
-                    fila.push_back('*');
+                    fila.push_back(0);
                 luma = 0.0f;
             }
             matrix.push_back(fila);
@@ -65,7 +65,7 @@ private:
 
 public:
     // funcion que transforma una imagen a 0s y 1s
-    vector<vector<char>> transform() {
+    vector<vector<int>> transform() {
         switch (_method) {
             case _601: {
                 const float __601[3] = {0.114f, 0.587f, 0.299f};
@@ -92,7 +92,11 @@ public:
     void print_transformed_img() {
         for (int i = 0; i < transformed_img.size(); ++i) {
             for (int j = 0; j < transformed_img[i].size(); ++j) {
-                cout << transformed_img[i][j] << " ";
+                if (transformed_img[i][j]) {
+                    cout << '\'' << " ";
+                } else {
+                    cout << '*' << " ";
+                }
             }
             cout << endl;
         }
@@ -100,6 +104,7 @@ public:
 
     void show_image() {
         string win_name = "Imagen ";
+        ///Hack para tener varias ventanas
         win_name += to_string(rand()%1000);
         imshow(win_name, img);
     }

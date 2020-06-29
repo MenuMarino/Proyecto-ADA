@@ -146,7 +146,7 @@ public:
 
         ///Respuesta.first contiene el matching (en un vector de pairs), respuesta.second contiene el peso minimo.
         t0 = clock();
-        vector<pair< vector< pair< vector<int>, vector<int> > >, float >> respuesta = algoritmoGreedyMatriz(pesosMA, pesosMB);
+        vector< pair< vector< pair< vector<int>, vector<int> > >, float > > respuesta = algoritmoGreedyMatriz(pesosMA, pesosMB);
         t1 = clock();
         float cont=0;
         cout <<endl<< "Algoritmo greedy. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC) << " segundos." << endl;
@@ -157,7 +157,6 @@ public:
             cont += respuesta[b].second;
             cout << endl << "__________________________" << endl;
             for (int i = 0; i < respuesta[b].first.size(); ++i) {
-
                 cout << "C" << i + 1 << " Indices(s) en A': ";
                 for (int j = 0; j < respuesta[b].first[i].first.size(); ++j) {
                     cout << respuesta[b].first[i].first[j] << " ";
@@ -261,8 +260,16 @@ public:
         t0 = clock();
         for (int i = 0; i < matrizA.size(); ++i) {
             Matrix = crearMatriz();
-            respuesta = algoritmoDinamico(pesosMA[i], pesosMB[i]);
-            Vrespuesta.push_back(respuesta);
+            if (pesosMA[i][0] != 0 && pesosMB[i][0] != 0) {
+                respuesta = algoritmoDinamico(pesosMA[i], pesosMB[i]);
+                Vrespuesta.push_back(respuesta);
+            } else {
+                /// En caso haya una fila llena de 0s
+                vector< pair<int, int> > foo;
+                foo.emplace_back(-1, -1);
+                respuesta = make_pair(foo, -1);
+                Vrespuesta.push_back(respuesta);
+            }
         }
         t1 = clock();
 
@@ -278,7 +285,11 @@ public:
 
         for (int i = 0; i < Vrespuesta.size(); ++i) {
             for (int j = 0; j < Vrespuesta[i].first.size(); ++j) {
-                cout << Vrespuesta[i].first[j].first << " " << Vrespuesta[i].first[j].second << " | ";
+                if (Vrespuesta[i].second == 0) {
+                    cout << "======================";
+                } else {
+                    cout << Vrespuesta[i].first[j].first << " " << Vrespuesta[i].first[j].second << " | ";
+                }
             }
             cout << "\n\n";
         }
@@ -296,11 +307,13 @@ public:
         auto imagen1 = new MatrixTransformer(path1, _601, 125);
         auto imagen2 = new MatrixTransformer(path2, _601, 125);
 
-        imagen1->transform();
-        imagen2->transform();
+        matrizA = imagen1->transform();
+        matrizB = imagen2->transform();
+        setPesosM();
         imagen1->print_transformed_img();
-        cout << endl;
+        cout << "============================================================" << endl;
         imagen2->print_transformed_img();
+        cout << endl;
         imagen1->show_image();
         imagen2->show_image();
         waitKey();
@@ -319,7 +332,12 @@ private:
         vector<pair< vector< pair< vector<int>, vector<int> > >, float >> aux;
 
         for(int i=0; i < a.size(); ++i){
-            aux.push_back(algoritmoGreedy(a[i], b[i]));
+            if (a[i][0] != 0 && b[i][0] != 0)
+                aux.push_back(algoritmoGreedy(a[i], b[i]));
+            else {
+                vector< pair< vector<int>, vector<int> > > tmp;
+                aux.push_back(make_pair(tmp, -1));
+            }
         }
 
         return aux;
@@ -417,7 +435,7 @@ private:
 
         return aux;
     }
-    
+
     ///El pair contiene el matching y el peso
     static pair< vector< pair<int, int> > , float > algoritmoRecursivo(vector<float> a, vector<float> b) {
         ///Variables para ayudar
@@ -802,24 +820,29 @@ private:
         vector <float> tmpA;
         pesosMA.resize(matrizA.size());
         for (i = 0; i < matrizA.size(); ++i) {
-            tmpA.clear();
-            temp = 0;
-            for (int j = 0; j < matrizA[i].size(); ++j) {
-                if (matrizA[i][j] == 1) {
-                    enabled = true;
-                    ++temp;
-                    if (j == matrizA[i].size() - 1) {
+            if (onlyZero(matrizA[i])) {
+                pesosMA[i].resize(1);
+                pesosMA[i][0] = -1;
+            } else {
+                tmpA.clear();
+                temp = 0;
+                for (int j = 0; j < matrizA[i].size(); ++j) {
+                    if (matrizA[i][j] == 1) {
+                        enabled = true;
+                        ++temp;
+                        if (j == matrizA[i].size() - 1) {
+                            tmpA.push_back(temp);
+                        }
+                    } else if (enabled) {
+                        enabled = false;
                         tmpA.push_back(temp);
+                        temp = 0;
                     }
-                } else if (enabled) {
-                    enabled = false;
-                    tmpA.push_back(temp);
-                    temp = 0;
                 }
-            }
-            pesosMA[i].resize(tmpA.size());
-            for (int x = 0; x < tmpA.size(); ++x) {
-                pesosMA[i][x] = tmpA[x];
+                pesosMA[i].resize(tmpA.size());
+                for (int x = 0; x < tmpA.size(); ++x) {
+                    pesosMA[i][x] = tmpA[x];
+                }
             }
         }
 
@@ -829,26 +852,39 @@ private:
         enabled = false;
         temp = 0;
         for (i = 0; i < matrizB.size(); ++i) {
-            tmpB.clear();
-            temp = 0;
-            for (int j = 0; j < matrizB[i].size(); ++j) {
-                if (matrizB[i][j] == 1) {
-                    enabled = true;
-                    ++temp;
-                    if (j == matrizB.size() - 1) {
+            if (onlyZero(matrizB[i])) {
+                pesosMB[i].resize(1);
+                pesosMB[i][0] = 0;
+            } else {
+                tmpB.clear();
+                temp = 0;
+                for (int j = 0; j < matrizB[i].size(); ++j) {
+                    if (matrizB[i][j] == 1) {
+                        enabled = true;
+                        ++temp;
+                        if (j == matrizB.size() - 1) {
+                            tmpB.push_back(temp);
+                        }
+                    } else if (enabled) {
+                        enabled = false;
                         tmpB.push_back(temp);
+                        temp = 0;
                     }
-                } else if (enabled) {
-                    enabled = false;
-                    tmpB.push_back(temp);
-                    temp = 0;
+                }
+                pesosMB[i].resize(tmpB.size());
+                for (int x = 0; x < tmpB.size(); ++x) {
+                    pesosMB[i][x] = tmpB[x];
                 }
             }
-            pesosMB[i].resize(tmpB.size());
-            for (int x = 0; x < tmpB.size(); ++x) {
-                pesosMB[i][x] = tmpB[x];
-            }
         }
+    }
+
+    static bool onlyZero(vector<int> tmp) {
+        for (int i : tmp) {
+            if (i == 1)
+                return false;
+        }
+        return true;
     }
 
     pair< vector< pair<int, int> > , float >** crearMatriz() {
@@ -878,8 +914,5 @@ private:
         Matrix = nullptr;
     }
 };
-
-
-class value;
 
 #endif //PROYECTO_MINMATCH_H
