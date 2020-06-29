@@ -21,28 +21,28 @@ int main() {
     switch (respuesta) {
         case 1: {
             //TODO: Matrices
-			string a;
-			string b;
+  			string a;
+  			string b;
 
-			cout << "Ingrese el array A (0101010101): "; cin >> a;
-			cout << "Ingrese el array B (1101101101): "; cin >> b;
+  			cout << "Ingrese el array A (0101010101): "; cin >> a;
+  			cout << "Ingrese el array B (1101101101): "; cin >> b;
 
-			for (char i : a) {
-				if (i != '1' && i != '0') {
-					cout << "Valor invalido!" << endl;
-					exit(-1);
-				}
+  			for (char i : a) {
+  				if (i != '1' && i != '0') {
+  					cout << "Valor invalido!" << endl;
+  					exit(-1);
+  				}
 
-				A.push_back( (int) i - 48);
-			}
+  				A.push_back( (int) i - 48);
+  			}
 
-			for (char i : b) {
-				if (i != '1' && i != '0') {
-                    cout << "Valor invalido!" << endl;
-                    exit(-1);
-                }
-				B.push_back( (int) i - 48);
-			}
+  			for (char i : b) {
+  				if (i != '1' && i != '0') {
+                      cout << "Valor invalido!" << endl;
+                      exit(-1);
+                  }
+  				B.push_back( (int) i - 48);
+  			}
 
             ///Leer las matrices
 
@@ -50,7 +50,7 @@ int main() {
             /// Cambia las matrices por las imagenes.
             minMatch->lecturaDeImagen();
             minMatch->greedyMatriz();
-            minMatch->dinamicoM();
+            minMatch->dinamicoMatriz();
 
             delete (minMatch);
             break;
@@ -68,7 +68,7 @@ int main() {
             /// Cambia las matrices por las imagenes.
             minMatch->lecturaDeImagen();
             minMatch->greedyMatriz();
-            minMatch->dinamicoM();
+            minMatch->dinamicoMejorado();
 
             delete (minMatch);
         }

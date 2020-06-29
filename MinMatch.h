@@ -8,6 +8,7 @@
 #include <iterator>
 #include <ctime>
 #include <fstream>
+#include <cmath>
 #include "MatrixTransformer.h"
 
 using namespace std;
@@ -246,7 +247,60 @@ public:
         return respuesta;
     }
 
-    vector < pair< vector< pair<int, int> > , float > > dinamicoM() {
+    vector < pair< vector< pair<int, int> > , float > > dinamicoMejorado() {
+        ///Medir tiempo
+        unsigned t0, t1;
+
+        ///Llenar la matriz de infinito
+        Matrix = crearMatriz();
+
+        vector < pair< vector< pair<int, int> > , float > > Vrespuesta;
+        pair< vector< pair<int, int> > , float > respuesta;
+
+        ///Respuesta.first contiene el matching, respuesta.second contiene el peso minimo.
+        t0 = clock();
+        for (int i = 0; i < matrizA.size(); ++i) {
+            Matrix = crearMatriz();
+            if (pesosMA[i][0] != 0 && pesosMB[i][0] != 0) {
+                respuesta = algoritmoDinamicoMejorado(pesosMA[i], pesosMB[i]);
+                Vrespuesta.push_back(respuesta);
+            } else {
+                /// En caso haya una fila llena de 0s
+                vector< pair<int, int> > foo;
+                foo.emplace_back(-1, -1);
+                respuesta = make_pair(foo, -1);
+                Vrespuesta.push_back(respuesta);
+            }
+        }
+        t1 = clock();
+
+        cout << "\nTransformacion dinamica. Tiempo de ejecucion: " << (double(t1-t0)/CLOCKS_PER_SEC);
+
+        float totalSum = 0;
+        for (auto & i : Vrespuesta) {
+            totalSum += i.second;
+        }
+
+        cout << "\nEl peso es: " << totalSum << "\nEl matching es: " << endl;
+
+        for (int i = 0; i < Vrespuesta.size(); ++i) {
+            for (int j = 0; j < Vrespuesta[i].first.size(); ++j) {
+                if (Vrespuesta[i].second == 0) {
+                    cout << "======================";
+                } else {
+                    cout << Vrespuesta[i].first[j].first << " " << Vrespuesta[i].first[j].second << " | ";
+                }
+            }
+            cout << "\n\n";
+        }
+
+        ///Limpiar la matriz
+        borrarMatriz();
+
+        return Vrespuesta;
+    }
+
+    vector < pair< vector< pair<int, int> > , float > > dinamicoMatriz() {
         ///Medir tiempo
         unsigned t0, t1;
 
@@ -313,9 +367,9 @@ public:
         cout << "============================================================" << endl;
         imagen2->print_transformed_img();
         cout << endl;
-        imagen1->show_image();
-        imagen2->show_image();
-        waitKey();
+        //imagen1->show_image();
+        //imagen2->show_image();
+        //waitKey();
 
         delete(imagen1);
         delete(imagen2);
@@ -764,6 +818,129 @@ private:
 
                 Matrix[i][j].first = tmp;
                 Matrix[i][j].second = _min;
+            }
+        }
+        return Matrix[n-1][m-1];
+    }
+
+    pair< vector< pair<int, int> > , float > algoritmoDinamicoMejorado(const vector<float>& a, const vector<float>& b) {
+        int n = a.size();
+        int m = b.size();
+        vector< pair<int, int> > match;
+        float peso = 0;
+        pair< vector< pair<int, int> > , float > respuesta;
+        float inf = std::numeric_limits<float>::max();
+        float varianzaA = 0;
+        float varianzaB = 0;
+        float varianzaFinal = 0;
+
+        ///Llenar la matriz con los casos base
+        Matrix[0][0].first.emplace_back(0, 0);
+        Matrix[0][0].second = a[0] / b[0];
+
+
+        ///Caso cuando j = 1
+        vector< pair<int, int> > helper;
+        helper.emplace_back(0,0);
+        float pesoAux = a[0];
+        for (int i = 1; i < n; ++i) {
+            pesoAux += a[i];
+            helper.emplace_back(i, 0);
+            Matrix[i][0].first = helper;
+            Matrix[i][0].second = pesoAux / b[0];
+        }
+        varianzaA += pesoAux;
+
+        ///Caso cuando i = 1
+        helper.clear();
+        helper.emplace_back(0,0);
+        pesoAux = b[0];
+        for (int j = 1; j < m; ++j) {
+            pesoAux += b[j];
+            helper.emplace_back(0, j);
+            Matrix[0][j].first = helper;
+            Matrix[0][j].second = a[0] / pesoAux;
+        }
+        varianzaB += pesoAux;
+
+        varianzaFinal = varianzaA / varianzaB;
+        ///Fin de casos base
+
+
+        float sum = 0;
+        float weight = 0;
+        float _min;
+        helper.clear();
+        vector< pair<int, int> > tmp;
+
+        for (int i = 1; i < n; ++i) {
+            for (int j = 1; j < m; ++j) {
+                tmp.clear();
+                _min = inf;
+                helper.clear();
+
+                ///El caso cuando A[i] se divide
+                for (int k = j - 1; k >= 0; --k) {
+                    sum = 0;
+                    helper.clear();
+                    for (int l = k + 1; l <= j; ++l) {
+                        sum += b[l];
+                        helper.emplace_back(i,l);
+                    }
+                    auto aux = Matrix[i-1][k];
+                    weight = aux.second + (a[i] / sum);
+
+                    if (weight < _min) {
+                        tmp.clear();
+                        for (auto & q : aux.first) {
+                            tmp.emplace_back(q.first, q.second);
+                        }
+                        for (auto & q : helper) {
+                            tmp.emplace_back(q.first, q.second);
+                        }
+                        _min = weight;
+                    }
+                }
+
+                helper.clear();
+                ///El caso cuando en B[i] se agrupa
+                for (int k = i - 1; k >= 0; --k) {
+                    sum = 0;
+                    helper.clear();
+                    for (int l = k + 1; l <= i; ++l) {
+                        sum += a[l];
+                        helper.emplace_back(l,j);
+                    }
+                    auto aux = Matrix[k][j-1];
+                    weight = aux.second + (sum / b[j]);
+
+                    if (weight < _min) {
+                        tmp.clear();
+                        for (auto & q : aux.first) {
+                            tmp.emplace_back(q.first, q.second);
+                        }
+                        for (auto & q : helper) {
+                            tmp.emplace_back(q.first, q.second);
+                        }
+                        _min = weight;
+                    }
+                }
+
+                helper.clear();
+                ///Conexion 1 a 1 (A[i] y B[i])
+                auto aux = Matrix[i-1][j-1];
+                weight = (a[i] / b[j]) + aux.second;
+                if (weight < _min) {
+                    tmp.clear();
+                    for (auto & q : aux.first) {
+                        tmp.emplace_back(q.first, q.second);
+                    }
+                    tmp.emplace_back(i, j);
+                    _min = weight;
+                }
+
+                Matrix[i][j].first = tmp;
+                Matrix[i][j].second = abs(_min - varianzaFinal);
             }
         }
         return Matrix[n-1][m-1];
