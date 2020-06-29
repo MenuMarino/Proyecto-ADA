@@ -1,10 +1,24 @@
 #include <iostream>
 #include <vector>
 #include "MinMatch.h"
+#include "MatrixTransformer.h"
 
 using namespace std;
 
 int main() {
+
+    MatrixTransformer matrixTransformer = MatrixTransformer(
+            "/Users/gabrielspranger/Desktop/OpenCV/Pregunta8/yo-1.png",
+            _709,
+            128.0f
+    );
+
+    vector<vector<bool>> m = matrixTransformer.transform();
+
+    matrixTransformer.print_transformed_img();
+
+    matrixTransformer.show_image();
+
     int respuesta;
     vector<int> A;
     vector<int> B;
@@ -12,7 +26,7 @@ int main() {
     vector< vector<int> > matrizB;
 
     do {
-        cout << "Ingresar arrays y matrices (1) o usar arrays y matrices (2):";
+        cout << "Ingresar arrays y matrices (1) o usar arrays y matrices (2): ";
         cin >> respuesta;
     } while (respuesta < 1 || respuesta > 2);
 
