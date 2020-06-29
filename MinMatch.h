@@ -331,15 +331,9 @@ private:
         vector<pair< vector< pair< vector<int>, vector<int> > >, float >> aux;
 
         for(int i=0; i < a.size(); ++i){
-<<<<<<< HEAD
             if (a[i][0] != 0 && b[i][0] != 0) {
                 aux.push_back(algoritmoGreedy(a[i], b[i]));
             } else {
-=======
-            if (a[i][0] != 0 && b[i][0] != 0)
-                aux.push_back(algoritmoGreedy(a[i], b[i]));
-            else {
->>>>>>> 53c913cb0889898fa55328687398e8f6e2722bb3
                 vector< pair< vector<int>, vector<int> > > tmp;
                 aux.push_back(make_pair(tmp, -1));
             }
