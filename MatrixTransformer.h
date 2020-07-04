@@ -36,6 +36,9 @@ public:
         ++instance_number;
         this->img = imread(imgpath, IMREAD_COLOR);
     }
+    void setMethod(method method) {
+        _method = method;
+    }
 
 private:
     vector<vector<int>> apply_transformation(const float coefficients[3]) {
