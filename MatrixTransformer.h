@@ -40,6 +40,10 @@ public:
         _method = method;
     }
 
+    void setUmbral(float _umbral) {
+        umbral = _umbral;
+    }
+
 private:
     vector<vector<int>> apply_transformation(const float coefficients[3]) {
         vector<vector<int>> matrix = {};
