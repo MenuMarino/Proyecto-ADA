@@ -1,6 +1,6 @@
-# Secuencias
+# Transformacion de imagenes
 
-Proyecto parcial del curso Análisis y Diseño de Algoritmos.
+Proyecto final del curso Análisis y Diseño de Algoritmos.
 
 
 ## Integrantes
