@@ -31,13 +31,16 @@ private:
     float umbral;
     vector<vector<int>> transformed_img = {};
     vector<vector<vector<int>>> color_img = {};
+    Mat black_and_white;
 
 public:
     MatrixTransformer() { ++instance_number; }
     MatrixTransformer(const string& imgpath, method _method, float umbral): _method{_method}, umbral{umbral} {
         ++instance_number;
         this->img = imread(imgpath, IMREAD_COLOR);
+        this->black_and_white = imread(imgpath, IMREAD_COLOR);
     }
+
     void setMethod(method method) {
         _method = method;
     }
@@ -69,10 +72,17 @@ private:
                 luma += float(img.at<cv::Vec3b>(r, c)[2]) * coefficients[2];
                 // si luma < umbral, push 1, sino, push 0
                 //fila.push_back(luma < umbral);
-                if (luma < umbral)
+                if (luma < umbral) {
                     fila.push_back(1);
-                else
+                    black_and_white.at<cv::Vec3b>(r, c)[0] = 255;
+                    black_and_white.at<cv::Vec3b>(r, c)[1] = 255;
+                    black_and_white.at<cv::Vec3b>(r, c)[2] = 255;
+                } else {
                     fila.push_back(0);
+                    black_and_white.at<cv::Vec3b>(r, c)[0] *= 0;
+                    black_and_white.at<cv::Vec3b>(r, c)[1] *= 0;
+                    black_and_white.at<cv::Vec3b>(r, c)[2] *= 0;
+                }
                 luma = 0.0f;
             }
             matrix.push_back(fila);
@@ -151,6 +161,13 @@ public:
         ///Hack para tener varias ventanas
         win_name += to_string(rand()%1000);
         imshow(win_name, img);
+    }
+
+    void show_blackAndWhite() {
+        string win_name = "Imagen ";
+        ///Hack para tener varias ventanas
+        win_name += to_string(rand()%1000);
+        imshow(win_name, black_and_white);
     }
 
     ~MatrixTransformer() {

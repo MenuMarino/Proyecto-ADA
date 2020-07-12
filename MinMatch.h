@@ -375,9 +375,6 @@ public:
         imagen1->loadImage(path1);
         imagen2->loadImage(path2);
 
-        colorMatrizA = imagen1->getColorImg();
-        colorMatrizB = imagen2->getColorImg();
-
         matrizA = imagen1->transform();
         matrizB = imagen2->transform();
 
@@ -388,13 +385,15 @@ public:
         cout << endl;
         imagen1->show_image();
         imagen2->show_image();
+        imagen1->show_blackAndWhite();
+        imagen2->show_blackAndWhite();
         waitKey();
 
         delete(imagen1);
         delete(imagen2);
     }
 
-    void animacion(enum algoritmo algoritmo_a_usar, int nimagenes_intermedias) {
+    void animacion(enum algoritmo& algoritmo_a_usar, int& nimagenes_intermedias) {
         vector < pair< vector< pair<int,        int         > >, float >> _minMatchingDinamico;
         vector < pair< vector< pair<vector<int>,vector<int> > >, float >> _minMatchingGreedy;
 
@@ -421,7 +420,7 @@ public:
         }
     }
 
-    void animacionDinamico(vector < pair< vector< pair<int, int>>, float >>* minMatching, int nimg_intermedias) {
+    void animacionDinamico(vector < pair< vector< pair<int, int>>, float >>* minMatching, int& nimg_intermedias) {
 //        colorMatrizA;
 //        colorMatrizB;
         // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
@@ -431,12 +430,13 @@ public:
 //        cada vez que el usuario presione una tecla, la animacion avanzará un paso
 //        for (int i = 0; i < nimg_intermedias; ++i) {
 //            imshow("Animación", colorMatrizA);
+//            aqui
 //            waitKey();
 //        }
 //        imshow("Animación", colorMatrizB);
     }
 
-    void animacionGreedy(vector < pair< vector< pair<vector<int>,vector<int> > >, float >>* minMatching, int nimg_intermedias) {
+    void animacionGreedy(vector < pair< vector< pair<vector<int>,vector<int> > >, float >>* minMatching, int& nimg_intermedias) {
 //        colorMatrizA;
 //        colorMatrizB;
         // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
@@ -446,6 +446,7 @@ public:
 //        cada vez que el usuario presione una tecla, la animacion avanzará un paso
 //        for (int i = 0; i < nimg_intermedias; ++i) {
 //            imshow("Animación", colorMatrizA);
+//            aqui
 //            waitKey();
 //        }
 //        imshow("Animación", colorMatrizB);
