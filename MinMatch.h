@@ -12,6 +12,12 @@
 #include <unistd.h>
 #include "MatrixTransformer.h"
 
+enum algoritmo {
+    GREEDY,
+    DYNAMIC,
+    IMPROVED_DYNAMIC
+};
+
 using namespace std;
 
 class MinMatch {
@@ -25,6 +31,9 @@ private:
     ///Matrices de 1s y 0s
     vector< vector<int> > matrizA;
     vector< vector<int> > matrizB;
+    ///matrizA y matrizB pero a color
+    Mat colorMatrizA;
+    Mat colorMatrizB;
     ///Matriz de pesos
     vector< vector<float> > pesosMA;
     vector< vector<float> > pesosMB;
@@ -354,16 +363,24 @@ public:
         return Vrespuesta;
     }
 
-    void lecturaDeImagen() {
+    void lecturaDeImagen(enum method _metodo, float umbral, const string& img1, const string& img2) {
         ///Objeto para leer la matriz
         string pwd = getcwd(NULL, 100);
-        string path1 = pwd + "/../yo-1.png";
-        string path2 = pwd + "/../yo.png";
-        auto imagen1 = new MatrixTransformer(path1, _601, 125);
-        auto imagen2 = new MatrixTransformer(path2, _601, 125);
+        string path1 = pwd + "/../" + img1;
+        string path2 = pwd + "/../" + img2;
+
+        auto imagen1 = new MatrixTransformer(path1, _metodo, umbral);
+        auto imagen2 = new MatrixTransformer(path2, _metodo, umbral);
+
+        imagen1->loadImage(path1);
+        imagen2->loadImage(path2);
+
+        colorMatrizA = imagen1->getColorImg();
+        colorMatrizB = imagen2->getColorImg();
 
         matrizA = imagen1->transform();
         matrizB = imagen2->transform();
+
         setPesosM();
         imagen1->print_transformed_img();
         cout << "============================================================" << endl;
@@ -377,12 +394,69 @@ public:
         delete(imagen2);
     }
 
+    void animacion(enum algoritmo algoritmo_a_usar, int nimagenes_intermedias) {
+        vector < pair< vector< pair<int,        int         > >, float >> _minMatchingDinamico;
+        vector < pair< vector< pair<vector<int>,vector<int> > >, float >> _minMatchingGreedy;
+
+        switch (algoritmo_a_usar) {
+            case GREEDY: {
+                _minMatchingGreedy = greedyMatriz();
+                animacionGreedy(&_minMatchingGreedy, nimagenes_intermedias);
+                break;
+            }
+            case DYNAMIC: {
+                _minMatchingDinamico = dinamicoMatriz();
+                animacionDinamico(&_minMatchingDinamico, nimagenes_intermedias);
+                break;
+            }
+            case IMPROVED_DYNAMIC: {
+                _minMatchingDinamico = dinamicoMejorado();
+                animacionDinamico(&_minMatchingDinamico, nimagenes_intermedias);
+                break;
+            }
+            default: {
+                cerr << "Algoritmo no soportado\n";
+                break;
+            }
+        }
+    }
+
+    void animacionDinamico(vector < pair< vector< pair<int, int>>, float >>* minMatching, int nimg_intermedias) {
+//        colorMatrizA;
+//        colorMatrizB;
+        // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
+
+        // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
+
+//        cada vez que el usuario presione una tecla, la animacion avanzará un paso
+//        for (int i = 0; i < nimg_intermedias; ++i) {
+//            imshow("Animación", colorMatrizA);
+//            waitKey();
+//        }
+//        imshow("Animación", colorMatrizB);
+    }
+
+    void animacionGreedy(vector < pair< vector< pair<vector<int>,vector<int> > >, float >>* minMatching, int nimg_intermedias) {
+//        colorMatrizA;
+//        colorMatrizB;
+        // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
+
+        // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
+
+//        cada vez que el usuario presione una tecla, la animacion avanzará un paso
+//        for (int i = 0; i < nimg_intermedias; ++i) {
+//            imshow("Animación", colorMatrizA);
+//            waitKey();
+//        }
+//        imshow("Animación", colorMatrizB);
+    }
+
     //Destructor
     ~MinMatch() = default;
 
 private:
     ///Metodos importantes
-    vector<pair< vector< pair< vector<int>, vector<int> > >, float >> algoritmoGreedyMatriz(vector<vector<float>>a, vector<vector<float>>b){
+    vector<pair< vector< pair< vector<int>, vector<int> > >, float >> algoritmoGreedyMatriz(vector<vector<float>>a, vector<vector<float>>b) {
 
         vector<pair< vector< pair< vector<int>, vector<int> > >, float >> aux;
 
@@ -399,7 +473,6 @@ private:
     }
 
     pair< vector< pair< vector<int>, vector<int> > >, float > algoritmoGreedy(vector<float> a, vector<float> b){
-
         vector< pair< vector<int>, vector<int> > > R;
         vector<int> A_aux;
         vector<int> B_aux;

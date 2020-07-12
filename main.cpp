@@ -48,7 +48,7 @@ int main() {
 
             auto minMatch = new MinMatch(A, B/*matrizA, matrizB*/);
             /// Cambia las matrices por las imagenes.
-            minMatch->lecturaDeImagen();
+            minMatch->lecturaDeImagen(_601, 125.0f, "yo.png", "yo-1.png");
             minMatch->greedyMatriz();
             minMatch->dinamicoMatriz();
 
@@ -66,7 +66,7 @@ int main() {
 
             auto minMatch = new MinMatch(A, B, matrizA, matrizB);
             /// Cambia las matrices por las imagenes.
-            minMatch->lecturaDeImagen();
+            minMatch->lecturaDeImagen(_601, 125.0f, "yo.png", "yo-1.png");
             minMatch->dinamicoMatriz();
             minMatch->dinamicoMejorado();
 
