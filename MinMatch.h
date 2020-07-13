@@ -37,6 +37,11 @@ private:
     ///Matriz de pesos
     vector< vector<float> > pesosMA;
     vector< vector<float> > pesosMB;
+    ///Matriz de indices
+    vector< vector< pair<int, int> > > indicesA;
+    vector< vector< pair<int, int> > > indicesB;
+    ///Matriz de agrupaciones
+
 
     ///Matriz utilizadad por el algoritmo memoizado y el de programacion dinamica
     pair< vector< pair<int, int> > , float >** Matrix = nullptr;
@@ -415,19 +420,26 @@ public:
     }
 
     void animacionDinamico(vector < pair< vector< pair<int, int>>, float >>* minMatching, int& nimg_intermedias) {
-//        colorMatrizA;
-//        colorMatrizB;
+        colorMatrizA;
+        colorMatrizB;
         // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
         // TODO: calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
         // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
         // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
 
-//        for (int i = 0; i < nimg_intermedias; ++i) {
-//            imshow("Animación", colorMatrizA);
-//            aqui
-//            waitKey();
-//        }
-//        imshow("Animación", colorMatrizB);
+        /// B G R
+        for (int i = 0; i < nimg_intermedias; ++i) {
+            imshow("Animación", colorMatrizA);
+
+            for (int n = 0; n < matrizA.size(); ++n) {
+                for (int m = 0; m < matrizA[i].size(); ++m) {
+
+                }
+            }
+
+            waitKey();
+        }
+        imshow("Animación", colorMatrizB);
     }
 
     void animacionGreedy(vector < pair< vector< pair<vector<int>,vector<int> > >, float >>* minMatching, int& nimg_intermedias) {
@@ -1060,6 +1072,7 @@ private:
         int temp = 0;
         bool enabled = false;
         int i;
+        int n, m;
 
         ///Contar los bloques de A
         vector <float> tmpA;
@@ -1075,6 +1088,7 @@ private:
                 for (int j = 0; j < matrizA[i].size(); ++j) {
                     if (matrizA[i][j] == 1) {
                         enabled = true;
+                        n = j;
                         ++temp;
                         if (j == matrizA[i].size() - 1) {
                             tmpA.push_back(temp);

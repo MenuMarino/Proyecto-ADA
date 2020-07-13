@@ -68,7 +68,7 @@ int main() {
             /// Cambia las matrices por las imagenes.
             minMatch->lecturaDeImagen(_601, 125.0f, "yo.png", "yo-1.png");
             //minMatch->dinamicoMatriz();
-            minMatch->dinamicoMejorado();
+            //minMatch->greedyMatriz();
 
             delete (minMatch);
         }
