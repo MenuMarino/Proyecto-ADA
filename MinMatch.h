@@ -269,9 +269,9 @@ public:
 
         ///Respuesta.first contiene el matching, respuesta.second contiene el peso minimo.
         t0 = clock();
-        for (int i = 0; i < matrizA.size(); ++i) {
+        for (int i = 0; i < pesosMA.size(); ++i) {
             Matrix = crearMatriz();
-            if (pesosMA[i][0] != 0 && pesosMB[i][0] != 0) {
+            if (pesosMA[i][0] != -1 && pesosMB[i][0] != -1) {
                 respuesta = algoritmoDinamicoMejorado(pesosMA[i], pesosMB[i]);
                 Vrespuesta.push_back(respuesta);
             } else {
@@ -293,13 +293,11 @@ public:
 
         cout << "\nEl peso es: " << totalSum << "\nEl matching es: " << endl;
 
-        for (int i = 0; i < Vrespuesta.size(); ++i) {
-            for (int j = 0; j < Vrespuesta[i].first.size(); ++j) {
-                if (Vrespuesta[i].second == 0) {
-                    cout << "======================";
-                } else {
-                    cout << Vrespuesta[i].first[j].first << " " << Vrespuesta[i].first[j].second << " | ";
-                }
+        cout << "Vres = " << Vrespuesta.size() << endl;
+
+        for (auto & i : Vrespuesta) {
+            for (auto & j : i.first) {
+                cout << j.first << " " << j.second << " | ";
             }
             cout << "\n\n";
         }
@@ -322,9 +320,9 @@ public:
 
         ///Respuesta.first contiene el matching, respuesta.second contiene el peso minimo.
         t0 = clock();
-        for (int i = 0; i < matrizA.size(); ++i) {
+        for (int i = 0; i < pesosMA.size(); ++i) {
             Matrix = crearMatriz();
-            if (pesosMA[i][0] != 0 && pesosMB[i][0] != 0) {
+            if (pesosMA[i][0] != -1 || pesosMB[i][0] != -1) {
                 respuesta = algoritmoDinamico(pesosMA[i], pesosMB[i]);
                 Vrespuesta.push_back(respuesta);
             } else {
@@ -346,13 +344,9 @@ public:
 
         cout << "\nEl peso es: " << totalSum << "\nEl matching es: " << endl;
 
-        for (int i = 0; i < Vrespuesta.size(); ++i) {
-            for (int j = 0; j < Vrespuesta[i].first.size(); ++j) {
-                if (Vrespuesta[i].second == 0) {
-                    cout << "======================";
-                } else {
-                    cout << Vrespuesta[i].first[j].first << " " << Vrespuesta[i].first[j].second << " | ";
-                }
+        for (auto & i : Vrespuesta) {
+            for (auto & j : i.first) {
+                cout << j.first << " " << j.second << " | ";
             }
             cout << "\n\n";
         }
@@ -424,10 +418,10 @@ public:
 //        colorMatrizA;
 //        colorMatrizB;
         // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
-
+        // TODO: calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
         // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
+        // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
 
-//        cada vez que el usuario presione una tecla, la animacion avanzará un paso
 //        for (int i = 0; i < nimg_intermedias; ++i) {
 //            imshow("Animación", colorMatrizA);
 //            aqui
@@ -440,10 +434,9 @@ public:
 //        colorMatrizA;
 //        colorMatrizB;
         // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
-
         // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
+        // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
 
-//        cada vez que el usuario presione una tecla, la animacion avanzará un paso
 //        for (int i = 0; i < nimg_intermedias; ++i) {
 //            imshow("Animación", colorMatrizA);
 //            aqui
@@ -1077,6 +1070,7 @@ private:
                 pesosMA[i][0] = -1;
             } else {
                 tmpA.clear();
+                enabled = false;
                 temp = 0;
                 for (int j = 0; j < matrizA[i].size(); ++j) {
                     if (matrizA[i][j] == 1) {
@@ -1106,9 +1100,10 @@ private:
         for (i = 0; i < matrizB.size(); ++i) {
             if (onlyZero(matrizB[i])) {
                 pesosMB[i].resize(1);
-                pesosMB[i][0] = 0;
+                pesosMB[i][0] = -1;
             } else {
                 tmpB.clear();
+                enabled = false;
                 temp = 0;
                 for (int j = 0; j < matrizB[i].size(); ++j) {
                     if (matrizB[i][j] == 1) {
@@ -1131,7 +1126,7 @@ private:
         }
     }
 
-    static bool onlyZero(vector<int> tmp) {
+    static bool onlyZero(const vector<int>& tmp) {
         for (int i : tmp) {
             if (i == 1)
                 return false;

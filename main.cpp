@@ -11,7 +11,7 @@ int main() {
     vector<int> B;
     vector< vector<int> > matrizA;
     vector< vector<int> > matrizB;
-    srand(time(NULL));
+    srand(time(nullptr));
 
     do {
         cout << "Ingresar arrays y matrices (1) o usar arrays y matrices (2): ";
@@ -57,8 +57,8 @@ int main() {
         }
         case 2: {
             ///Matrices
-            matrizA = { {0,1,1,1}, {1,1,1,1}, {1,0,1,1}, {1,0,1,0} };
-            matrizB = { {1,1,1,1}, {1,1,0,1}, {1,0,1,0}, {0,0,1,0} };
+            matrizA = { {0,1,1,1}, {1,1,1,1}, {0,0,0,0}, {1,0,1,0} };
+            matrizB = { {1,1,1,1}, {1,1,0,1}, {0,0,0,0}, {0,0,1,0} };
 
             ///Vectores
             A = {1,1,1,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0,0};
@@ -67,7 +67,7 @@ int main() {
             auto minMatch = new MinMatch(A, B, matrizA, matrizB);
             /// Cambia las matrices por las imagenes.
             minMatch->lecturaDeImagen(_601, 125.0f, "yo.png", "yo-1.png");
-            minMatch->dinamicoMatriz();
+            //minMatch->dinamicoMatriz();
             minMatch->dinamicoMejorado();
 
             delete (minMatch);
