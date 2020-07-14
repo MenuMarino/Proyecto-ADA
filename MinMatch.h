@@ -41,7 +41,7 @@ private:
     vector< vector< pair<int, int> > > indicesA;
     vector< vector< pair<int, int> > > indicesB;
     ///Matriz de agrupaciones
-
+    vector< vector < pair< vector<int>, vector<int> > > > agrupaciones;
 
     ///Matriz utilizadad por el algoritmo memoizado y el de programacion dinamica
     pair< vector< pair<int, int> > , float >** Matrix = nullptr;
@@ -327,7 +327,7 @@ public:
         t0 = clock();
         for (int i = 0; i < pesosMA.size(); ++i) {
             Matrix = crearMatriz();
-            if (pesosMA[i][0] != -1 || pesosMB[i][0] != -1) {
+            if (pesosMA[i][0] != -1 && pesosMB[i][0] != -1) {
                 respuesta = algoritmoDinamico(pesosMA[i], pesosMB[i]);
                 Vrespuesta.push_back(respuesta);
             } else {
@@ -399,31 +399,35 @@ public:
         switch (algoritmo_a_usar) {
             case GREEDY: {
                 _minMatchingGreedy = greedyMatriz();
-                animacionGreedy(&_minMatchingGreedy, nimagenes_intermedias);
+                animacionGreedy(nimagenes_intermedias);
                 break;
             }
             case DYNAMIC: {
                 _minMatchingDinamico = dinamicoMatriz();
-                animacionDinamico(&_minMatchingDinamico, nimagenes_intermedias);
+                agruparIndices(_minMatchingDinamico);
+                animacionDinamico(nimagenes_intermedias);
                 break;
             }
             case IMPROVED_DYNAMIC: {
                 _minMatchingDinamico = dinamicoMejorado();
-                animacionDinamico(&_minMatchingDinamico, nimagenes_intermedias);
+                agruparIndices(_minMatchingDinamico);
+                animacionDinamico(nimagenes_intermedias);
                 break;
             }
             default: {
                 cerr << "Algoritmo no soportado\n";
+                cout << "Algoritmos disponibles: IMPROVED_DYNAMIC, DYNAMIC, GREEDY.\n";
                 break;
             }
         }
     }
 
-    void animacionDinamico(vector < pair< vector< pair<int, int>>, float >>* minMatching, int& nimg_intermedias) {
+    void animacionDinamico(int& nimg_intermedias) {
         colorMatrizA;
         colorMatrizB;
         // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
         // TODO: calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
+        // TODO: usar las matrices de ayuda (indices y agrupaciones)
         // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
         // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
 
@@ -442,7 +446,7 @@ public:
         imshow("Animación", colorMatrizB);
     }
 
-    void animacionGreedy(vector < pair< vector< pair<vector<int>,vector<int> > >, float >>* minMatching, int& nimg_intermedias) {
+    void animacionGreedy(int& nimg_intermedias) {
 //        colorMatrizA;
 //        colorMatrizB;
         // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
@@ -1076,65 +1080,128 @@ private:
 
         ///Contar los bloques de A
         vector <float> tmpA;
+        vector < pair<int, int> > tmpAI;
         pesosMA.resize(matrizA.size());
+        indicesA.resize(matrizA.size());
+
         for (i = 0; i < matrizA.size(); ++i) {
             if (onlyZero(matrizA[i])) {
                 pesosMA[i].resize(1);
                 pesosMA[i][0] = -1;
+                indicesA[i].resize(1);
+                indicesA[i][0] = make_pair(-1, -1);
             } else {
                 tmpA.clear();
+                tmpAI.clear();
                 enabled = false;
                 temp = 0;
                 for (int j = 0; j < matrizA[i].size(); ++j) {
                     if (matrizA[i][j] == 1) {
+                        if (!enabled) {
+                            n = j;
+                        }
                         enabled = true;
-                        n = j;
                         ++temp;
                         if (j == matrizA[i].size() - 1) {
+                            m = j;
                             tmpA.push_back(temp);
+                            tmpAI.emplace_back(make_pair(n, m));
                         }
                     } else if (enabled) {
+                        m = j;
+                        tmpAI.emplace_back(make_pair(n, m - 1));
                         enabled = false;
                         tmpA.push_back(temp);
                         temp = 0;
                     }
                 }
                 pesosMA[i].resize(tmpA.size());
+                indicesA[i].resize(tmpA.size());
                 for (int x = 0; x < tmpA.size(); ++x) {
                     pesosMA[i][x] = tmpA[x];
+                    indicesA[i][x] = tmpAI[x];
                 }
             }
         }
 
         ///Contar los bloques de B
         vector <float> tmpB;
+        vector < pair<int, int> > tmpBI;
         pesosMB.resize(matrizB.size());
+        indicesB.resize(matrizB.size());
         enabled = false;
         temp = 0;
+
         for (i = 0; i < matrizB.size(); ++i) {
             if (onlyZero(matrizB[i])) {
                 pesosMB[i].resize(1);
                 pesosMB[i][0] = -1;
+                indicesB[i].resize(1);
+                indicesB[i][0] = make_pair(-1, -1);
             } else {
                 tmpB.clear();
+                tmpBI.clear();
                 enabled = false;
                 temp = 0;
                 for (int j = 0; j < matrizB[i].size(); ++j) {
                     if (matrizB[i][j] == 1) {
+                        if (!enabled) {
+                            n = j;
+                        }
                         enabled = true;
                         ++temp;
                         if (j == matrizB.size() - 1) {
+                            m = j;
                             tmpB.push_back(temp);
+                            tmpBI.emplace_back(make_pair(n, m));
                         }
                     } else if (enabled) {
+                        m = j;
                         enabled = false;
                         tmpB.push_back(temp);
+                        tmpBI.emplace_back(make_pair(n, m - 1));
                         temp = 0;
                     }
                 }
                 pesosMB[i].resize(tmpB.size());
+                indicesB[i].resize(tmpB.size());
                 for (int x = 0; x < tmpB.size(); ++x) {
                     pesosMB[i][x] = tmpB[x];
+                    indicesB[i][x] = tmpBI[x];
+                }
+            }
+        }
+    }
+
+    void agruparIndices(const vector < pair< vector< pair<int, int> >, float >>& matching) {
+        agrupaciones.clear();
+        agrupaciones.resize(matrizA.size());
+        for (int i = 0; i < matching.size(); ++i) {
+            auto matchingFila = matching[i].first;
+            bool grupo = false;
+            pair< vector<int>, vector<int> > tmp;
+            for (int j = 0; j < matchingFila.size(); ++j) {
+                Start:
+                if (!grupo) {
+                    tmp.first.clear();
+                    tmp.second.clear();
+                    tmp.first.emplace_back(matchingFila[j].first);
+                    tmp.second.emplace_back(matchingFila[j].second);
+                    grupo = true;
+                } else {
+                    if (matchingFila[j].first == matchingFila[j-1].first) {
+                        tmp.second.emplace_back(matchingFila[j].second);
+                    } else if (matchingFila[j].second == matchingFila[j-1].second) {
+                        tmp.first.emplace_back(matchingFila[j].first);
+                    } else {
+                        agrupaciones[i].emplace_back(tmp);
+                        grupo = false;
+                        goto Start;
+                    }
+                }
+                if (j == matchingFila.size()-1) {
+                    agrupaciones[i].emplace_back(tmp);
+                    grupo = false;
                 }
             }
         }
