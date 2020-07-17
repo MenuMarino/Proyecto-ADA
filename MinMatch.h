@@ -295,8 +295,6 @@ public:
 
         cout << "\nEl peso es: " << totalSum << "\nEl matching es: " << endl;
 
-        cout << "Vres = " << Vrespuesta.size() << endl;
-
         for (auto & i : Vrespuesta) {
             for (auto & j : i.first) {
                 cout << j.first << " " << j.second << " | ";
@@ -388,24 +386,6 @@ public:
         //imagen1->show_blackAndWhite();
         //imagen2->show_blackAndWhite();
         //waitKey();
-
-        for (int i = 0; i < pesosMA.size(); ++i) {
-            cout << "i: " << i  << " ";
-            for (int j = 0; j < pesosMA[i].size(); ++j) {
-                cout << pesosMA[i][j] << " ";
-            }
-            cout << endl;
-        }
-
-        cout << "B" << endl;
-
-        for (int i = 0; i < pesosMB.size(); ++i) {
-            cout << "i: " << i << " ";
-            for (int j = 0; j < pesosMB[i].size(); ++j) {
-                cout << pesosMB[i][j] << " ";
-            }
-            cout << endl;
-        }
 
         delete(imagen1);
         delete(imagen2);
@@ -792,8 +772,8 @@ private:
         for (int i = 1; i < n; ++i) {
             pesoAux += a[i];
             helper.emplace_back(i, 0);
-            Matrix[i][0].first = helper;
-            Matrix[i][0].second = pesoAux / b[0];
+            float result = pesoAux / b[0];
+            Matrix[i][0] = make_pair(helper, result);
         }
 
         ///Caso cuando i = 1
@@ -803,8 +783,8 @@ private:
         for (int j = 1; j < m; ++j) {
             pesoAux += b[j];
             helper.emplace_back(0, j);
-            Matrix[0][j].first = helper;
-            Matrix[0][j].second = a[0] / pesoAux;
+            float result = a[0] / pesoAux;
+            Matrix[0][j] = make_pair(helper, result);
         }
         ///Fin de casos base
 
@@ -881,8 +861,7 @@ private:
                     _min = weight;
                 }
 
-                Matrix[i][j].first = tmp;
-                Matrix[i][j].second = _min;
+                Matrix[i][j] = make_pair(tmp, _min);
             }
         }
         return Matrix[n-1][m-1];
@@ -913,8 +892,6 @@ private:
             helper.emplace_back(i, 0);
             float result = pesoAux / b[0];
             Matrix[i][0] = make_pair(helper, result);
-            //Matrix[i][0].first = helper;
-            //Matrix[i][0].second = result;
         }
         varianzaA += pesoAux;
 
@@ -927,8 +904,6 @@ private:
             helper.emplace_back(0, j);
             float result = a[0] / pesoAux;
             Matrix[0][j] = make_pair(helper, result);
-            //Matrix[0][j].first = helper;
-            //Matrix[0][j].second = result;
         }
         varianzaB += pesoAux;
 
@@ -1009,8 +984,6 @@ private:
                 }
 
                 Matrix[i][j] = make_pair(tmp, abs(_min - varianzaFinal));
-                //Matrix[i][j].first = tmp;
-                //Matrix[i][j].second = abs(_min - varianzaFinal);
             }
         }
         return Matrix[n-1][m-1];
@@ -1078,6 +1051,7 @@ private:
                             int yA = indicesA[i][columnA].first + a;
                             int yB = indicesB[i][grupoB].first + indexB;
 
+                            // FIXME: colores de la transformacion
                             int variacionB = (colorMatrizA.at<cv::Vec3b>(i, yA)[0] - colorMatrizB.at<cv::Vec3b>(i, yB)[0])/nimg_intermedias;
                             int variacionG = (colorMatrizA.at<cv::Vec3b>(i, yA)[1] - colorMatrizB.at<cv::Vec3b>(i, yB)[1])/nimg_intermedias;
                             int variacionR = (colorMatrizA.at<cv::Vec3b>(i, yA)[2] - colorMatrizB.at<cv::Vec3b>(i, yB)[2])/nimg_intermedias;
@@ -1125,6 +1099,7 @@ private:
                             int yA = indicesA[i][grupoA].first + a;
                             int yB = indicesB[i][columnB].first + indexA;
 
+                            // FIXME: colores de la transformacion
                             int variacionB = (colorMatrizA.at<cv::Vec3b>(i, yA)[0] - colorMatrizB.at<cv::Vec3b>(i, yB)[0])/nimg_intermedias;
                             int variacionG = (colorMatrizA.at<cv::Vec3b>(i, yA)[1] - colorMatrizB.at<cv::Vec3b>(i, yB)[1])/nimg_intermedias;
                             int variacionR = (colorMatrizA.at<cv::Vec3b>(i, yA)[2] - colorMatrizB.at<cv::Vec3b>(i, yB)[2])/nimg_intermedias;

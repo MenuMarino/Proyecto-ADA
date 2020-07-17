@@ -45,10 +45,11 @@ int main() {
   			}
 
             ///Leer las matrices
+            // TODO: Input de matrices?
 
             auto minMatch = new MinMatch(A, B/*matrizA, matrizB*/);
             /// Cambia las matrices por las imagenes.
-            minMatch->lecturaDeImagen(_601, 125.0f, "yo.png", "yo-1.png");
+            minMatch->lecturaDeImagen(_601, 125.0f, "bush.png", "arnold.png");
             minMatch->greedyMatriz();
             minMatch->dinamicoMatriz();
 
@@ -61,14 +62,18 @@ int main() {
             matrizB = { {1,1,1,1}, {1,1,0,1}, {0,0,0,0}, {0,0,1,0} };
 
             ///Vectores
-            A = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-            B = {0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,0,1,1,1,1,1,1,1,1};
+            A = {1,1,1,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0,0};
+            B = {0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1};
 
             auto minMatch = new MinMatch(A, B, matrizA, matrizB);
             /// Cambia las matrices por las imagenes.
             minMatch->lecturaDeImagen(_601, 125.0f, "bush.png", "arnold.png");
+
+            /// Pedirle al usuario que algoritmo quiere usar IMPROVED_DYNAMIC, DYNAMIC o GREEDY
             minMatch->animacion(IMPROVED_DYNAMIC, 4);
-            //minMatch->greedyMatriz();
+
+            /// Demostracion de greedyMatriz(), dinamicoMejorado(), dinamicoMatriz()
+            // TODO: llamar a las funciones para demostrar su uso
 
             delete (minMatch);
         }
