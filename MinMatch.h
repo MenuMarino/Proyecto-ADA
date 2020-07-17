@@ -42,8 +42,7 @@ private:
     vector< vector< pair<int, int> > > indicesB;
     ///Matriz de agrupaciones
     vector< vector < pair< vector<int>, vector<int> > > > agrupaciones;
-
-    ///Matriz utilizadad por el algoritmo memoizado y el de programacion dinamica
+    ///Matriz utilizada por el algoritmo memoizado y el de programacion dinamica
     pair< vector< pair<int, int> > , float >** Matrix = nullptr;
 
 public:
@@ -266,16 +265,13 @@ public:
         ///Medir tiempo
         unsigned t0, t1;
 
-        ///Llenar la matriz de infinito
-        Matrix = crearMatriz();
-
         vector < pair< vector< pair<int, int> > , float > > Vrespuesta;
         pair< vector< pair<int, int> > , float > respuesta;
 
         ///Respuesta.first contiene el matching, respuesta.second contiene el peso minimo.
         t0 = clock();
         for (int i = 0; i < pesosMA.size(); ++i) {
-            Matrix = crearMatriz();
+            Matrix = crearMatriz(pesosMA[i].size(), pesosMB[i].size());
             if (pesosMA[i][0] != -1 && pesosMB[i][0] != -1) {
                 respuesta = algoritmoDinamicoMejorado(pesosMA[i], pesosMB[i]);
                 Vrespuesta.push_back(respuesta);
@@ -293,7 +289,8 @@ public:
 
         float totalSum = 0;
         for (auto & i : Vrespuesta) {
-            totalSum += i.second;
+            if (i.second != -1)
+                totalSum += i.second;
         }
 
         cout << "\nEl peso es: " << totalSum << "\nEl matching es: " << endl;
@@ -326,7 +323,7 @@ public:
         ///Respuesta.first contiene el matching, respuesta.second contiene el peso minimo.
         t0 = clock();
         for (int i = 0; i < pesosMA.size(); ++i) {
-            Matrix = crearMatriz();
+            Matrix = crearMatriz(pesosMA[i].size(), pesosMB[i].size());
             if (pesosMA[i][0] != -1 && pesosMB[i][0] != -1) {
                 respuesta = algoritmoDinamico(pesosMA[i], pesosMB[i]);
                 Vrespuesta.push_back(respuesta);
@@ -344,7 +341,8 @@ public:
 
         float totalSum = 0;
         for (auto & i : Vrespuesta) {
-            totalSum += i.second;
+            if (i.second != -1)
+                totalSum += i.second;
         }
 
         cout << "\nEl peso es: " << totalSum << "\nEl matching es: " << endl;
@@ -376,25 +374,46 @@ public:
 
         matrizA = imagen1->transform();
         matrizB = imagen2->transform();
+        colorMatrizA = imagen1->getMat();
+        colorMatrizB = imagen2->getMat();
 
         setPesosM();
+
         imagen1->print_transformed_img();
         cout << "============================================================" << endl;
         imagen2->print_transformed_img();
         cout << endl;
-        imagen1->show_image();
-        imagen2->show_image();
-        imagen1->show_blackAndWhite();
-        imagen2->show_blackAndWhite();
-        waitKey();
+        //imagen1->show_image();
+        //imagen2->show_image();
+        //imagen1->show_blackAndWhite();
+        //imagen2->show_blackAndWhite();
+        //waitKey();
+
+        for (int i = 0; i < pesosMA.size(); ++i) {
+            cout << "i: " << i  << " ";
+            for (int j = 0; j < pesosMA[i].size(); ++j) {
+                cout << pesosMA[i][j] << " ";
+            }
+            cout << endl;
+        }
+
+        cout << "B" << endl;
+
+        for (int i = 0; i < pesosMB.size(); ++i) {
+            cout << "i: " << i << " ";
+            for (int j = 0; j < pesosMB[i].size(); ++j) {
+                cout << pesosMB[i][j] << " ";
+            }
+            cout << endl;
+        }
 
         delete(imagen1);
         delete(imagen2);
     }
 
-    void animacion(enum algoritmo& algoritmo_a_usar, int& nimagenes_intermedias) {
-        vector < pair< vector< pair<int,        int         > >, float >> _minMatchingDinamico;
-        vector < pair< vector< pair<vector<int>,vector<int> > >, float >> _minMatchingGreedy;
+    void animacion(enum algoritmo algoritmo_a_usar, int nimagenes_intermedias) {
+        vector < pair< vector< pair<int, int> >, float > > _minMatchingDinamico;
+        vector < pair< vector< pair<vector<int>, vector<int> > >, float > > _minMatchingGreedy;
 
         switch (algoritmo_a_usar) {
             case GREEDY: {
@@ -420,45 +439,6 @@ public:
                 break;
             }
         }
-    }
-
-    void animacionDinamico(int& nimg_intermedias) {
-        colorMatrizA;
-        colorMatrizB;
-        // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
-        // TODO: calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
-        // TODO: usar las matrices de ayuda (indices y agrupaciones)
-        // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
-        // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
-
-        /// B G R
-        for (int i = 0; i < nimg_intermedias; ++i) {
-            imshow("Animación", colorMatrizA);
-
-            for (int n = 0; n < matrizA.size(); ++n) {
-                for (int m = 0; m < matrizA[i].size(); ++m) {
-
-                }
-            }
-
-            waitKey();
-        }
-        imshow("Animación", colorMatrizB);
-    }
-
-    void animacionGreedy(int& nimg_intermedias) {
-//        colorMatrizA;
-//        colorMatrizB;
-        // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
-        // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
-        // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
-
-//        for (int i = 0; i < nimg_intermedias; ++i) {
-//            imshow("Animación", colorMatrizA);
-//            aqui
-//            waitKey();
-//        }
-//        imshow("Animación", colorMatrizB);
     }
 
     //Destructor
@@ -931,8 +911,10 @@ private:
         for (int i = 1; i < n; ++i) {
             pesoAux += a[i];
             helper.emplace_back(i, 0);
-            Matrix[i][0].first = helper;
-            Matrix[i][0].second = pesoAux / b[0];
+            float result = pesoAux / b[0];
+            Matrix[i][0] = make_pair(helper, result);
+            //Matrix[i][0].first = helper;
+            //Matrix[i][0].second = result;
         }
         varianzaA += pesoAux;
 
@@ -943,8 +925,10 @@ private:
         for (int j = 1; j < m; ++j) {
             pesoAux += b[j];
             helper.emplace_back(0, j);
-            Matrix[0][j].first = helper;
-            Matrix[0][j].second = a[0] / pesoAux;
+            float result = a[0] / pesoAux;
+            Matrix[0][j] = make_pair(helper, result);
+            //Matrix[0][j].first = helper;
+            //Matrix[0][j].second = result;
         }
         varianzaB += pesoAux;
 
@@ -1024,11 +1008,154 @@ private:
                     _min = weight;
                 }
 
-                Matrix[i][j].first = tmp;
-                Matrix[i][j].second = abs(_min - varianzaFinal);
+                Matrix[i][j] = make_pair(tmp, abs(_min - varianzaFinal));
+                //Matrix[i][j].first = tmp;
+                //Matrix[i][j].second = abs(_min - varianzaFinal);
             }
         }
         return Matrix[n-1][m-1];
+    }
+
+    ///Animaciones
+    void animacionDinamico(int& nimg_intermedias) {
+        // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
+        // TODO: calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
+        // TODO: usar las matrices de ayuda (indices y agrupaciones)
+        // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
+        // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
+        for (int n = 0; n < nimg_intermedias; ++n) {
+            imshow("Animación", colorMatrizA);
+            for (int i = 0; i < agrupaciones.size(); ++i) {
+                for (int j = 0; j < agrupaciones[i].size(); ++j) {
+                    /// Chequear si existe un matching es esta fila
+                    if (agrupaciones[i][j].first[0] == -1 || agrupaciones[i][j].second[0] == -1) {
+                        continue;
+                    }
+
+                    /// Decidir si es agrupacion o division de A -> B
+                    bool isDivision = (agrupaciones[i][j].first.size() == 1);
+                    int rangeA = 0;
+                    int rangeB = 0;
+
+                    if (isDivision) {
+                        int columnA = agrupaciones[i][j].first[0];
+                        rangeA = abs(indicesA[i][columnA].first - indicesA[i][columnA].second) + 1;
+
+                        /// Tamaño del rango de B
+                        /// Quizás se puede realizar la transformacion dentro de este for, quizás.
+                        for (int a = 0; a < agrupaciones[i][j].second.size(); ++a) {
+                            int columnB = agrupaciones[i][j].second[a];
+                            if (columnB != -1) {
+                                rangeB += abs(indicesB[i][columnB].first - indicesB[i][columnB].second) + 1;
+                            }
+                        }
+
+                        ///Aqui empieza la transformacion
+                        /// B G R
+                        /*
+                            luma += float(img.at<cv::Vec3b>(r, c)[0]); B
+                            luma += float(img.at<cv::Vec3b>(r, c)[1]); G
+                            luma += float(img.at<cv::Vec3b>(r, c)[2]); R
+                        */
+                        int bits = min(rangeA, rangeB);
+                        int inicioA = indicesA[i][columnA].first;
+                        int grupoB = 0;
+                        /// InicioB va a ir variando entre los vectores a los cuales se divide A
+                        /// La fila siempre va a ser i, la columna de A es indicesA[i][columnA].first + a,
+                        /// para B es mas delicado: indicesB[i][grupoB].first + indexB
+
+                        for (int a = 0, indexB = 0; a < bits; ++a, ++indexB) {
+                            if (indexB == abs(indicesB[i][grupoB].first - indicesB[i][grupoB].second) + 1) {
+                                indexB = -1;
+                                ++grupoB;
+                                if (grupoB == agrupaciones[i][j].second.size()) {
+                                    break;
+                                }
+                                --a;
+                                continue;
+                            }
+
+                            int yA = indicesA[i][columnA].first + a;
+                            int yB = indicesB[i][grupoB].first + indexB;
+
+                            int variacionB = (colorMatrizA.at<cv::Vec3b>(i, yA)[0] - colorMatrizB.at<cv::Vec3b>(i, yB)[0])/nimg_intermedias;
+                            int variacionG = (colorMatrizA.at<cv::Vec3b>(i, yA)[1] - colorMatrizB.at<cv::Vec3b>(i, yB)[1])/nimg_intermedias;
+                            int variacionR = (colorMatrizA.at<cv::Vec3b>(i, yA)[2] - colorMatrizB.at<cv::Vec3b>(i, yB)[2])/nimg_intermedias;
+
+                            colorMatrizA.at<cv::Vec3b>(i, yA)[0] += variacionB;
+                            colorMatrizA.at<cv::Vec3b>(i, yA)[1] += variacionG;
+                            colorMatrizA.at<cv::Vec3b>(i, yA)[2] += variacionR;
+                        }
+
+                    } else {
+                        int columnB = agrupaciones[i][j].second[0];
+                        rangeB = abs(indicesB[i][columnB].first - indicesB[i][columnB].second) + 1;
+
+                        /// Tamaño del rango de A
+                        /// Quizás se puede realizar la transformacion dentro de este for, quizás.
+                        for (int a = 0; a < agrupaciones[i][j].first.size(); ++a) {
+                            int columnA = agrupaciones[i][j].first[a];
+                            if (columnA != -1) {
+                                rangeA += abs(indicesA[i][columnA].first - indicesA[i][columnA].second) + 1;
+                            }
+                        }
+
+                        ///Aqui empieza la transformacion
+                        /// B G R
+                        /*
+                            luma += float(img.at<cv::Vec3b>(r, c)[0]); B
+                            luma += float(img.at<cv::Vec3b>(r, c)[1]); G
+                            luma += float(img.at<cv::Vec3b>(r, c)[2]); R
+                        */
+                        int bits = min(rangeA, rangeB);
+                        int inicioB = indicesA[i][columnB].first;
+                        int grupoA = 0;
+
+                        for (int a = 0, indexA = 0; a < bits; ++a, ++indexA) {
+                            if (indexA == abs(indicesA[i][grupoA].first - indicesA[i][grupoA].second)) {
+                                indexA = -1;
+                                ++grupoA;
+                                if (grupoA == agrupaciones[i][j].first.size()) {
+                                    break;
+                                }
+                                --a;
+                                continue;
+                            }
+
+                            int yA = indicesA[i][grupoA].first + a;
+                            int yB = indicesB[i][columnB].first + indexA;
+
+                            int variacionB = (colorMatrizA.at<cv::Vec3b>(i, yA)[0] - colorMatrizB.at<cv::Vec3b>(i, yB)[0])/nimg_intermedias;
+                            int variacionG = (colorMatrizA.at<cv::Vec3b>(i, yA)[1] - colorMatrizB.at<cv::Vec3b>(i, yB)[1])/nimg_intermedias;
+                            int variacionR = (colorMatrizA.at<cv::Vec3b>(i, yA)[2] - colorMatrizB.at<cv::Vec3b>(i, yB)[2])/nimg_intermedias;
+
+                            colorMatrizA.at<cv::Vec3b>(i, yA)[0] += variacionB;
+                            colorMatrizA.at<cv::Vec3b>(i, yA)[1] += variacionG;
+                            colorMatrizA.at<cv::Vec3b>(i, yA)[2] += variacionR;
+                        }
+
+                    }
+                }
+            }
+            waitKey();
+        }
+        imshow("Animación", colorMatrizB);
+        waitKey();
+    }
+
+    void animacionGreedy(int& nimg_intermedias) {
+//        colorMatrizA;
+//        colorMatrizB;
+        // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
+        // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
+        // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
+
+//        for (int i = 0; i < nimg_intermedias; ++i) {
+//            imshow("Animación", colorMatrizA);
+//            aqui
+//            waitKey();
+//        }
+//        imshow("Animación", colorMatrizB);
     }
 
     ///Metodos de apoyo
@@ -1150,16 +1277,16 @@ private:
                         }
                         enabled = true;
                         ++temp;
-                        if (j == matrizB.size() - 1) {
+                        if (j == matrizB[i].size() - 1) {
                             m = j;
                             tmpB.push_back(temp);
                             tmpBI.emplace_back(make_pair(n, m));
                         }
                     } else if (enabled) {
                         m = j;
+                        tmpBI.emplace_back(make_pair(n, m - 1));
                         enabled = false;
                         tmpB.push_back(temp);
-                        tmpBI.emplace_back(make_pair(n, m - 1));
                         temp = 0;
                     }
                 }
@@ -1219,6 +1346,25 @@ private:
         pair< vector< pair<int, int> > , float >** array2D = nullptr;
         int N = pesosA.size();
         int M = pesosB.size();
+        float inf = std::numeric_limits<float>::max();
+
+        ///Inicializar matriz de dimensiones N y M llena con infinito
+        array2D = new pair< vector< pair<int, int> > , float >*[N];
+        for (int i = 0; i < N; ++i) {
+            array2D[i] = new pair< vector< pair<int, int> > , float >[M];
+            for (int j = 0; j < M; ++j) {
+                array2D[i][j].second = inf;
+            }
+        }
+
+        return array2D;
+    }
+
+    /// Esto se usa para las imagenes, ya que cada fila puede tener mas o menos matches
+    pair< vector< pair<int, int> > , float >** crearMatriz(int a, int b) {
+        pair< vector< pair<int, int> > , float >** array2D = nullptr;
+        int N = a;
+        int M = b;
         float inf = std::numeric_limits<float>::max();
 
         ///Inicializar matriz de dimensiones N y M llena con infinito

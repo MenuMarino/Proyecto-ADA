@@ -61,13 +61,13 @@ int main() {
             matrizB = { {1,1,1,1}, {1,1,0,1}, {0,0,0,0}, {0,0,1,0} };
 
             ///Vectores
-            A = {1,1,1,0,1,0,1,1,0,1,1,0,1,1,1,0,1,0,0};
-            B = {0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1};
+            A = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+            B = {0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,0,1,1,1,1,1,1,1,1};
 
             auto minMatch = new MinMatch(A, B, matrizA, matrizB);
             /// Cambia las matrices por las imagenes.
-            minMatch->lecturaDeImagen(_601, 125.0f, "yo.png", "yo-1.png");
-            minMatch->dinamicoMatriz();
+            minMatch->lecturaDeImagen(_601, 125.0f, "bush.png", "arnold.png");
+            minMatch->animacion(IMPROVED_DYNAMIC, 4);
             //minMatch->greedyMatriz();
 
             delete (minMatch);
