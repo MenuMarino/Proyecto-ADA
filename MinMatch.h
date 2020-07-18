@@ -15,7 +15,8 @@
 enum algoritmo {
     GREEDY,
     DYNAMIC,
-    IMPROVED_DYNAMIC
+    IMPROVED_DYNAMIC,
+    PIXEL_BY_PIXEL
 };
 
 using namespace std;
@@ -31,9 +32,10 @@ private:
     ///Matrices de 1s y 0s
     vector< vector<int> > matrizA;
     vector< vector<int> > matrizB;
-    ///matrizA y matrizB pero a color
+    ///matrizA y matrizB pero a color. Matriz C ayudara a la transformacion
     Mat colorMatrizA;
     Mat colorMatrizB;
+    Mat colorMatrizC;
     ///Matriz de pesos
     vector< vector<float> > pesosMA;
     vector< vector<float> > pesosMB;
@@ -411,6 +413,10 @@ public:
                 _minMatchingDinamico = dinamicoMejorado();
                 agruparIndices(_minMatchingDinamico);
                 animacionDinamico(nimagenes_intermedias);
+                break;
+            }
+            case PIXEL_BY_PIXEL: {
+                animacionPixel(nimagenes_intermedias);
                 break;
             }
             default: {
@@ -991,13 +997,15 @@ private:
 
     ///Animaciones
     void animacionDinamico(int& nimg_intermedias) {
-        // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
-        // TODO: calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
-        // TODO: usar las matrices de ayuda (indices y agrupaciones)
-        // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
+        // Hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
+        // Calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
+        // Usar las matrices de ayuda (indices y agrupaciones)
         // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
+        ///Inicializar matriz de ayuda
+        colorMatrizC = colorMatrizA;
+
         for (int n = 0; n < nimg_intermedias; ++n) {
-            imshow("Animación", colorMatrizA);
+            imshow("Animacion", colorMatrizC);
             for (int i = 0; i < agrupaciones.size(); ++i) {
                 for (int j = 0; j < agrupaciones[i].size(); ++j) {
                     /// Chequear si existe un matching es esta fila
@@ -1024,12 +1032,6 @@ private:
                         }
 
                         ///Aqui empieza la transformacion
-                        /// B G R
-                        /*
-                            luma += float(img.at<cv::Vec3b>(r, c)[0]); B
-                            luma += float(img.at<cv::Vec3b>(r, c)[1]); G
-                            luma += float(img.at<cv::Vec3b>(r, c)[2]); R
-                        */
                         int bits = min(rangeA, rangeB);
                         int inicioA = indicesA[i][columnA].first;
                         int grupoB = 0;
@@ -1051,14 +1053,13 @@ private:
                             int yA = indicesA[i][columnA].first + a;
                             int yB = indicesB[i][grupoB].first + indexB;
 
-                            // FIXME: colores de la transformacion
-                            int variacionB = (colorMatrizA.at<cv::Vec3b>(i, yA)[0] - colorMatrizB.at<cv::Vec3b>(i, yB)[0])/nimg_intermedias;
-                            int variacionG = (colorMatrizA.at<cv::Vec3b>(i, yA)[1] - colorMatrizB.at<cv::Vec3b>(i, yB)[1])/nimg_intermedias;
-                            int variacionR = (colorMatrizA.at<cv::Vec3b>(i, yA)[2] - colorMatrizB.at<cv::Vec3b>(i, yB)[2])/nimg_intermedias;
+                            int variacionB = (colorMatrizB.at<cv::Vec3b>(i, yB)[0] - colorMatrizA.at<cv::Vec3b>(i, yA)[0])/nimg_intermedias;
+                            int variacionG = (colorMatrizB.at<cv::Vec3b>(i, yB)[1] - colorMatrizA.at<cv::Vec3b>(i, yA)[1])/nimg_intermedias;
+                            int variacionR = (colorMatrizB.at<cv::Vec3b>(i, yB)[2] - colorMatrizA.at<cv::Vec3b>(i, yA)[2])/nimg_intermedias;
 
-                            colorMatrizA.at<cv::Vec3b>(i, yA)[0] += variacionB;
-                            colorMatrizA.at<cv::Vec3b>(i, yA)[1] += variacionG;
-                            colorMatrizA.at<cv::Vec3b>(i, yA)[2] += variacionR;
+                            colorMatrizC.at<cv::Vec3b>(i, yA)[0] += variacionB;
+                            colorMatrizC.at<cv::Vec3b>(i, yA)[1] += variacionG;
+                            colorMatrizC.at<cv::Vec3b>(i, yA)[2] += variacionR;
                         }
 
                     } else {
@@ -1075,12 +1076,6 @@ private:
                         }
 
                         ///Aqui empieza la transformacion
-                        /// B G R
-                        /*
-                            luma += float(img.at<cv::Vec3b>(r, c)[0]); B
-                            luma += float(img.at<cv::Vec3b>(r, c)[1]); G
-                            luma += float(img.at<cv::Vec3b>(r, c)[2]); R
-                        */
                         int bits = min(rangeA, rangeB);
                         int inicioB = indicesA[i][columnB].first;
                         int grupoA = 0;
@@ -1099,14 +1094,13 @@ private:
                             int yA = indicesA[i][grupoA].first + a;
                             int yB = indicesB[i][columnB].first + indexA;
 
-                            // FIXME: colores de la transformacion
-                            int variacionB = (colorMatrizA.at<cv::Vec3b>(i, yA)[0] - colorMatrizB.at<cv::Vec3b>(i, yB)[0])/nimg_intermedias;
-                            int variacionG = (colorMatrizA.at<cv::Vec3b>(i, yA)[1] - colorMatrizB.at<cv::Vec3b>(i, yB)[1])/nimg_intermedias;
-                            int variacionR = (colorMatrizA.at<cv::Vec3b>(i, yA)[2] - colorMatrizB.at<cv::Vec3b>(i, yB)[2])/nimg_intermedias;
+                            int variacionB = (colorMatrizB.at<cv::Vec3b>(i, yB)[0] - colorMatrizA.at<cv::Vec3b>(i, yA)[0])/nimg_intermedias;
+                            int variacionG = (colorMatrizB.at<cv::Vec3b>(i, yB)[1] - colorMatrizA.at<cv::Vec3b>(i, yA)[1])/nimg_intermedias;
+                            int variacionR = (colorMatrizB.at<cv::Vec3b>(i, yB)[2] - colorMatrizA.at<cv::Vec3b>(i, yA)[2])/nimg_intermedias;
 
-                            colorMatrizA.at<cv::Vec3b>(i, yA)[0] += variacionB;
-                            colorMatrizA.at<cv::Vec3b>(i, yA)[1] += variacionG;
-                            colorMatrizA.at<cv::Vec3b>(i, yA)[2] += variacionR;
+                            colorMatrizC.at<cv::Vec3b>(i, yA)[0] += variacionB;
+                            colorMatrizC.at<cv::Vec3b>(i, yA)[1] += variacionG;
+                            colorMatrizC.at<cv::Vec3b>(i, yA)[2] += variacionR;
                         }
 
                     }
@@ -1114,23 +1108,54 @@ private:
             }
             waitKey();
         }
-        imshow("Animación", colorMatrizB);
+        imshow("Animacion", colorMatrizB);
         waitKey();
     }
 
     void animacionGreedy(int& nimg_intermedias) {
-//        colorMatrizA;
-//        colorMatrizB;
         // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
-        // OJO: vamos a cambiar 'colorMatrizA' en cada paso, 'colorMatrizB' se queda intacta y la mostramos al final (luego de 'nimg_intermedias' pasos)
+        // USAR MATRIZ C
         // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
-
+        colorMatrizC = colorMatrizA;
 //        for (int i = 0; i < nimg_intermedias; ++i) {
-//            imshow("Animación", colorMatrizA);
+//            imshow("Animacion", colorMatrizA);
 //            aqui
 //            waitKey();
 //        }
-//        imshow("Animación", colorMatrizB);
+//        imshow("Animacion", colorMatrizB);
+    }
+
+    void animacionPixel(int& nimg_intermedias) {
+        // Hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
+        // Calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
+        // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
+        ///Inicializar matriz de ayuda
+        colorMatrizC = colorMatrizA;
+        int variacionB = 0;
+        int variacionG = 0;
+        int variacionR = 0;
+
+        for (int n = 0; n < nimg_intermedias; ++n) {
+            imshow("Animacion", colorMatrizC);
+            for (int i = 0; i < matrizA.size(); ++i) {
+                for (int j = 0; j < matrizA[i].size(); ++j) {
+                    variacionB = (colorMatrizB.at<cv::Vec3b>(i, j)[0] - colorMatrizA.at<cv::Vec3b>(i, j)[0]) /
+                                 nimg_intermedias;
+                    variacionG = (colorMatrizB.at<cv::Vec3b>(i, j)[1] - colorMatrizA.at<cv::Vec3b>(i, j)[1]) /
+                                 nimg_intermedias;
+                    variacionR = (colorMatrizB.at<cv::Vec3b>(i, j)[2] - colorMatrizA.at<cv::Vec3b>(i, j)[2]) /
+                                 nimg_intermedias;
+
+                    colorMatrizC.at<cv::Vec3b>(i, j)[0] += variacionB;
+                    colorMatrizC.at<cv::Vec3b>(i, j)[1] += variacionG;
+                    colorMatrizC.at<cv::Vec3b>(i, j)[2] += variacionR;
+                }
+            }
+            waitKey();
+        }
+
+        imshow("Animacion", colorMatrizB);
+        waitKey();
     }
 
     ///Metodos de apoyo

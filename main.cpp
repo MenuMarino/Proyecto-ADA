@@ -7,6 +7,7 @@ using namespace std;
 
 int main() {
     int respuesta;
+    int nDeImagenes = 0;
     vector<int> A;
     vector<int> B;
     vector< vector<int> > matrizA;
@@ -14,13 +15,12 @@ int main() {
     srand(time(nullptr));
 
     do {
-        cout << "Ingresar arrays y matrices (1) o usar arrays y matrices (2): ";
+        cout << "Ingresar valores (1) o usar valores por defecto (2): ";
         cin >> respuesta;
     } while (respuesta < 1 || respuesta > 2);
 
     switch (respuesta) {
         case 1: {
-            //TODO: Matrices
   			string a;
   			string b;
 
@@ -44,14 +44,43 @@ int main() {
   				B.push_back( (int) i - 48);
   			}
 
-            ///Leer las matrices
-            // TODO: Input de matrices?
+            auto minMatch = new MinMatch(A, B);
 
-            auto minMatch = new MinMatch(A, B/*matrizA, matrizB*/);
+            /// Pedirle al usuario que algoritmo quiere usar IMPROVED_DYNAMIC, DYNAMIC, GREEDY o PIXEL_BY_PIXEL
+            do {
+                cout << "Metodo greedy (1), dinamico (2), dinamico mejorado (3) o pixel por pixel (4): ";
+                cin >> respuesta;
+            } while (respuesta < 1 || respuesta > 3);
+
             /// Cambia las matrices por las imagenes.
             minMatch->lecturaDeImagen(_601, 125.0f, "bush.png", "arnold.png");
+
+            do {
+                cout << "Ingrese un numero de imagenes: ";
+                cin >> nDeImagenes;
+            } while (nDeImagenes < 1);
+
+            switch (respuesta) {
+                case 1:
+                    minMatch->animacion(GREEDY, nDeImagenes);
+                    break;
+                case 2:
+                    minMatch->animacion(DYNAMIC, nDeImagenes);
+                    break;
+                case 3:
+                    minMatch->animacion(IMPROVED_DYNAMIC, nDeImagenes);
+                    break;
+                case 4:
+                    minMatch->animacion(PIXEL_BY_PIXEL, nDeImagenes);
+                    break;
+                default:
+                    break;
+            }
+
+            /// Demostracion de greedyMatriz(), dinamicoMatriz(), dinamicoMejorado()
             minMatch->greedyMatriz();
             minMatch->dinamicoMatriz();
+            minMatch->dinamicoMejorado();
 
             delete (minMatch);
             break;
@@ -66,14 +95,42 @@ int main() {
             B = {0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1};
 
             auto minMatch = new MinMatch(A, B, matrizA, matrizB);
+
+            /// Pedirle al usuario que algoritmo quiere usar IMPROVED_DYNAMIC, DYNAMIC, GREEDY o PIXEL_BY_PIXEL
+            do {
+                cout << "Metodo greedy (1), dinamico (2), dinamico mejorado (3) o pixel por pixel (4): ";
+                cin >> respuesta;
+            } while (respuesta < 1 || respuesta > 4);
+
             /// Cambia las matrices por las imagenes.
             minMatch->lecturaDeImagen(_601, 125.0f, "bush.png", "arnold.png");
 
-            /// Pedirle al usuario que algoritmo quiere usar IMPROVED_DYNAMIC, DYNAMIC o GREEDY
-            minMatch->animacion(IMPROVED_DYNAMIC, 4);
+            do {
+                cout << "Ingrese un numero de imagenes: ";
+                cin >> nDeImagenes;
+            } while (nDeImagenes < 1);
 
-            /// Demostracion de greedyMatriz(), dinamicoMejorado(), dinamicoMatriz()
-            // TODO: llamar a las funciones para demostrar su uso
+            switch (respuesta) {
+                case 1:
+                    minMatch->animacion(GREEDY, nDeImagenes);
+                    break;
+                case 2:
+                    minMatch->animacion(DYNAMIC, nDeImagenes);
+                    break;
+                case 3:
+                    minMatch->animacion(IMPROVED_DYNAMIC, nDeImagenes);
+                    break;
+                case 4:
+                    minMatch->animacion(PIXEL_BY_PIXEL, nDeImagenes);
+                    break;
+                default:
+                    break;
+            }
+
+            /// Demostracion de greedyMatriz(), dinamicoMatriz(), dinamicoMejorado()
+            minMatch->greedyMatriz();
+            minMatch->dinamicoMatriz();
+            minMatch->dinamicoMejorado();
 
             delete (minMatch);
         }
