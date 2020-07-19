@@ -10,7 +10,7 @@
 #include <fstream>
 #include <cmath>
 #include <unistd.h>
-#include "MatrixTransformer.h"
+//#include "MatrixTransformer.h"
 
 enum algoritmo {
     GREEDY,
@@ -33,9 +33,12 @@ private:
     vector< vector<int> > matrizA;
     vector< vector<int> > matrizB;
     ///matrizA y matrizB pero a color. Matriz C ayudara a la transformacion
+
     Mat colorMatrizA;
     Mat colorMatrizB;
     Mat colorMatrizC;
+
+
     ///Matriz de pesos
     vector< vector<float> > pesosMA;
     vector< vector<float> > pesosMB;
@@ -157,6 +160,29 @@ public:
         return respuesta;
     }
 
+    pair< vector< pair<int, int> > , float > converter(pair< vector< pair< vector<int>, vector<int> > >, float > data){
+        pair< vector< pair<int, int> > , float > respuesta;
+        vector <pair<int, int>> vec_aux;
+        pair<int, int> aux;
+        for(int i = 0; i < data.first.size() ; ++i ){
+
+            for(int j = 0; j < data.first[i].first.size(); ++j){
+                for(int k = 0; k < data.first[i].second.size(); ++k){
+                    aux.first = data.first[i].first[j];
+                    aux.second = data.first[i].second[k];
+                    vec_aux.push_back(aux);
+
+                }
+            }
+
+
+        }
+
+        respuesta = make_pair(vec_aux, data.second);
+
+        return respuesta;
+    }
+
     vector<pair< vector< pair< vector<int>, vector<int> > >, float >> greedyMatriz() {
         ///Medir tiempo
         unsigned t0, t1;
@@ -210,6 +236,7 @@ public:
         cout << endl;
         return respuesta;
     }
+
 
     pair< vector< pair<int, int> > , float > memoizado() {
         ///Medir tiempo
@@ -395,11 +422,17 @@ public:
 
     void animacion(enum algoritmo algoritmo_a_usar, int nimagenes_intermedias) {
         vector < pair< vector< pair<int, int> >, float > > _minMatchingDinamico;
-        vector < pair< vector< pair<vector<int>, vector<int> > >, float > > _minMatchingGreedy;
+        vector < pair< vector< pair<int, int> >, float > > _minMatchingGreedy;
+        vector < pair< vector< pair<vector<int>, vector<int> > >, float > > AUX;
 
         switch (algoritmo_a_usar) {
             case GREEDY: {
-                _minMatchingGreedy = greedyMatriz();
+
+                AUX = greedyMatriz();
+                for(int i=0; i< AUX.size();++i){
+                    _minMatchingGreedy.push_back(converter(AUX[i]));
+                }
+                agruparIndices(_minMatchingGreedy);
                 animacionGreedy(nimagenes_intermedias);
                 break;
             }
