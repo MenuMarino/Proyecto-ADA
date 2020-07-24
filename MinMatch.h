@@ -10,7 +10,7 @@
 #include <fstream>
 #include <cmath>
 #include <unistd.h>
-//#include "MatrixTransformer.h"
+#include "MatrixTransformer.h"
 
 enum algoritmo {
     GREEDY,
@@ -33,12 +33,9 @@ private:
     vector< vector<int> > matrizA;
     vector< vector<int> > matrizB;
     ///matrizA y matrizB pero a color. Matriz C ayudara a la transformacion
-
     Mat colorMatrizA;
     Mat colorMatrizB;
     Mat colorMatrizC;
-
-
     ///Matriz de pesos
     vector< vector<float> > pesosMA;
     vector< vector<float> > pesosMB;
@@ -51,7 +48,6 @@ private:
     pair< vector< pair<int, int> > , float >** Matrix = nullptr;
 
 public:
-
     ///Constructor
     MinMatch(const vector<int>& _A, const vector<int>& _B) {
         for (int i : _A) {
@@ -160,29 +156,6 @@ public:
         return respuesta;
     }
 
-    pair< vector< pair<int, int> > , float > converter(pair< vector< pair< vector<int>, vector<int> > >, float > data){
-        pair< vector< pair<int, int> > , float > respuesta;
-        vector <pair<int, int>> vec_aux;
-        pair<int, int> aux;
-        for(int i = 0; i < data.first.size() ; ++i ){
-
-            for(int j = 0; j < data.first[i].first.size(); ++j){
-                for(int k = 0; k < data.first[i].second.size(); ++k){
-                    aux.first = data.first[i].first[j];
-                    aux.second = data.first[i].second[k];
-                    vec_aux.push_back(aux);
-
-                }
-            }
-
-
-        }
-
-        respuesta = make_pair(vec_aux, data.second);
-
-        return respuesta;
-    }
-
     vector<pair< vector< pair< vector<int>, vector<int> > >, float >> greedyMatriz() {
         ///Medir tiempo
         unsigned t0, t1;
@@ -236,7 +209,6 @@ public:
         cout << endl;
         return respuesta;
     }
-
 
     pair< vector< pair<int, int> > , float > memoizado() {
         ///Medir tiempo
@@ -433,19 +405,19 @@ public:
                     _minMatchingGreedy.push_back(converter(AUX[i]));
                 }
                 agruparIndices(_minMatchingGreedy);
-                animacionGreedy(nimagenes_intermedias);
+                animacionP(nimagenes_intermedias);
                 break;
             }
             case DYNAMIC: {
                 _minMatchingDinamico = dinamicoMatriz();
                 agruparIndices(_minMatchingDinamico);
-                animacionDinamico(nimagenes_intermedias);
+                animacionP(nimagenes_intermedias);
                 break;
             }
             case IMPROVED_DYNAMIC: {
                 _minMatchingDinamico = dinamicoMejorado();
                 agruparIndices(_minMatchingDinamico);
-                animacionDinamico(nimagenes_intermedias);
+                animacionP(nimagenes_intermedias);
                 break;
             }
             case PIXEL_BY_PIXEL: {
@@ -1029,7 +1001,7 @@ private:
     }
 
     ///Animaciones
-    void animacionDinamico(int& nimg_intermedias) {
+    void animacionP(int& nimg_intermedias) {
         // Hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
         // Calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
         // Usar las matrices de ayuda (indices y agrupaciones)
@@ -1145,19 +1117,6 @@ private:
         waitKey();
     }
 
-    void animacionGreedy(int& nimg_intermedias) {
-        // TODO: hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
-        // USAR MATRIZ C
-        // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
-        colorMatrizC = colorMatrizA;
-//        for (int i = 0; i < nimg_intermedias; ++i) {
-//            imshow("Animacion", colorMatrizA);
-//            aqui
-//            waitKey();
-//        }
-//        imshow("Animacion", colorMatrizB);
-    }
-
     void animacionPixel(int& nimg_intermedias) {
         // Hacer la animacion paso por paso, esta tiene que depender de 'nimg_intermedias'
         // Calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
@@ -1230,6 +1189,29 @@ private:
                 temp = 0;
             }
         }
+    }
+
+    pair< vector< pair<int, int> > , float > converter(pair< vector< pair< vector<int>, vector<int> > >, float > data){
+        pair< vector< pair<int, int> > , float > respuesta;
+        vector <pair<int, int>> vec_aux;
+        pair<int, int> aux;
+        for(int i = 0; i < data.first.size() ; ++i ){
+
+            for(int j = 0; j < data.first[i].first.size(); ++j){
+                for(int k = 0; k < data.first[i].second.size(); ++k){
+                    aux.first = data.first[i].first[j];
+                    aux.second = data.first[i].second[k];
+                    vec_aux.push_back(aux);
+
+                }
+            }
+
+
+        }
+
+        respuesta = make_pair(vec_aux, data.second);
+
+        return respuesta;
     }
 
     void setPesosM(){
