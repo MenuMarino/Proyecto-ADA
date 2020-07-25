@@ -73,7 +73,7 @@ private:
                 // si luma < umbral, push 1, sino, push 0
                 //fila.push_back(luma < umbral);
                 if (luma < umbral) {
-                    fila.push_back(1l);
+                    fila.push_back(1);
                     black_and_white.at<cv::Vec3b>(r, c)[0] = 255;
                     black_and_white.at<cv::Vec3b>(r, c)[1] = 255;
                     black_and_white.at<cv::Vec3b>(r, c)[2] = 255;
