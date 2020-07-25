@@ -98,12 +98,12 @@ int main() {
 
             /// Pedirle al usuario que algoritmo quiere usar IMPROVED_DYNAMIC, DYNAMIC, GREEDY o PIXEL_BY_PIXEL
             do {
-                cout << "Metodo greedy (1), dinamico (2), dinamico mejorado (3) o pixel por pixel (4): ";
+                cout << "Metodo greedy (1), dinamico (2), dinamico mejorado (3), pixel por pixel (4) o todos (5): ";
                 cin >> respuesta;
-            } while (respuesta < 1 || respuesta > 4);
+            } while (respuesta < 1 || respuesta > 5);
 
             /// Cambia las matrices por las imagenes.
-            minMatch->lecturaDeImagen(_601, 125.0f, "bush.png", "arnold.png");
+            minMatch->lecturaDeImagen(_601, 125.0f, "arnold.png", "bush.png");
 
             do {
                 cout << "Ingrese un numero de imagenes: ";
@@ -121,6 +121,12 @@ int main() {
                     minMatch->animacion(IMPROVED_DYNAMIC, nDeImagenes);
                     break;
                 case 4:
+                    minMatch->animacion(PIXEL_BY_PIXEL, nDeImagenes);
+                    break;
+                case 5:
+                    minMatch->animacion(GREEDY, nDeImagenes);
+                    minMatch->animacion(DYNAMIC, nDeImagenes);
+                    minMatch->animacion(IMPROVED_DYNAMIC, nDeImagenes);
                     minMatch->animacion(PIXEL_BY_PIXEL, nDeImagenes);
                     break;
                 default:

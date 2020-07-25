@@ -426,7 +426,7 @@ public:
             }
             default: {
                 cerr << "Algoritmo no soportado\n";
-                cout << "Algoritmos disponibles: IMPROVED_DYNAMIC, DYNAMIC, GREEDY.\n";
+                cout << "Algoritmos disponibles: IMPROVED_DYNAMIC, DYNAMIC, GREEDY, PIXEL_BY_PIXEL.\n";
                 break;
             }
         }
@@ -1007,7 +1007,7 @@ private:
         // Usar las matrices de ayuda (indices y agrupaciones)
         // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
         ///Inicializar matriz de ayuda
-        colorMatrizC = colorMatrizA;
+        colorMatrizC = colorMatrizA.clone();
 
         for (int n = 0; n < nimg_intermedias; ++n) {
             imshow("Animacion", colorMatrizC);
@@ -1122,7 +1122,7 @@ private:
         // Calcular la diferencia de colores e ir aumentando gradualmente. (ΔR/nimg)
         // Cada vez que el usuario presione una tecla, la animacion avanzará un paso
         ///Inicializar matriz de ayuda
-        colorMatrizC = colorMatrizA;
+        colorMatrizC = colorMatrizA.clone();
         int variacionB = 0;
         int variacionG = 0;
         int variacionR = 0;
@@ -1396,9 +1396,11 @@ private:
 
     void borrarMatriz() {
         ///Borrar la matriz para uso posterior
+        /*
         for(int i = 0 ; i < pesosA.size() ; ++i){
             delete[] Matrix[i];
         }
+        */
         delete[] Matrix;
         Matrix = nullptr;
     }
