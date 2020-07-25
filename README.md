@@ -11,5 +11,8 @@ Proyecto final del curso Análisis y Diseño de Algoritmos.
 |Gabriel Spranger |gabriel.spranger@utec.edu.pe   |       
 |Rodrigo Cespedes |rodrigo.cespedes@utec.edu.pe   |
 
+## Dependencias
+Para poder ejecutar el proyecto, se requiere de [OpenCV](https://opencv.org/).
+
 ## Profesor
 Ph.D. Juan Gutierrez Alva
