@@ -30,7 +30,7 @@
 	\includegraphics[width=0.3\textwidth]{utec2.png}\par\vspace{1cm}
 	{\scshape\Large An\'alisis y Diseño de Algoritmos\par}
 	\vspace{1.5cm}
-	{\huge\bfseries Proyecto Parcial\par}
+	{\huge\bfseries Proyecto Final\par}
 	\vspace{1.5cm}
 	{\Large\itshape Benjamín Díaz García\par}
 	\href{mailto:benjamin.diaz@utec.edu.pe}{benjamin.diaz@utec.edu.pe}\\
@@ -236,13 +236,13 @@ c*max(m,n) \newline
         \ENDIF
         \STATE
         \IF {$m$ == 1}
-            \STATE Respuesta.first.emplace\_back($A'_1+A'_2+\ldots +A'_n, B'_1$)
+            \STATE Respuesta.first.emplace\_back($A'_1\cup A'_2\cup \ldots \cup A'_n, B'_1$)
             \STATE Respuesta.second = $\dfrac{A'_1+A'_2+\ldots +A'_n}{B'_1}$
             \RETURN Respuesta
         \ENDIF
         \STATE
         \IF {$n$ == 1}
-            \STATE Respuesta.first.emplace\_back($A'_1, B'_1+B'_2+\ldots +B'_m$)
+            \STATE Respuesta.first.emplace\_back($A'_1, B'_1\cup B'_2\cup \ldots \cup B'_m$)
             \STATE Respuesta.second = $\dfrac{A'_1}{B'_1+B'_2+\ldots +B'_m}$
             \RETURN Respuesta
         \ENDIF
@@ -255,7 +255,7 @@ c*max(m,n) \newline
             \STATE {Respuesta'.second $\gets$ Respuesta'.second $ + \frac{A'_n}{B_{k+1}+\ldots+B_m}$}
             \IF {$min >$ Respuesta'.second} 
                 \STATE Respuesta.first.clear()
-                \STATE Respuesta.first.emplace\_back($A'_n, B_{k+1}+\ldots+B_m$)
+                \STATE Respuesta.first.emplace\_back($A'_n, B_{k+1}\cup \ldots\cup B_m$)
                 \STATE Respuesta.first = Respuesta.first $\cup$ Respuesta'.first
                 \STATE Respuesta.second = Respuesta'.second
             \ENDIF
@@ -268,7 +268,7 @@ c*max(m,n) \newline
             \STATE {Respuesta'.second $\gets$ Respuesta'.second + $\frac{A'_{k+1}+\ldots +A'_{n}}{B'_m}$}}
             \IF {$min >$ Respuesta'.second}
                 \STATE Respuesta.first.clear()
-                \STATE Respuesta.first.emplace\_back($A'_{k+1} + \ldots + A'_n, B'_m$)
+                \STATE Respuesta.first.emplace\_back($A'_{k+1} \cup  \ldots \cup A'_n, B'_m$)
                 \STATE Respuesta.first = Respuesta.first $\cup$  Respuesta'.first
                 \STATE Respuesta.second = Respuesta'.second
             \ENDIF
@@ -376,7 +376,7 @@ Por lo tanto, si $c = \dfrac{1}{2}$:
         \STATE
         \IF {$m$ == 1}
             \IF {$M[n][1] == \infty$}
-                \STATE Respuesta'.first.emplace\_back($A'_1+A'_2+\ldots +A'_n, B'_1$)
+                \STATE Respuesta'.first.emplace\_back($A'_1\cup A'_2\cup \ldots \cup A'_n, B'_1$)
                 \STATE Respuesta'.second = $\dfrac{A'_1+A'_2+\ldots +A'_n}{B'_1}$
                 \STATE {$M[n][1] =$ Respuesta'}
             \ENDIF
@@ -385,8 +385,8 @@ Por lo tanto, si $c = \dfrac{1}{2}$:
         \STATE
         \IF {$n$ == 1}
             \IF {$M[1][n] == \infty$}
-                \STATE Respuesta'.first.emplace\_back($A'_1, B'_1+B'_2+\ldots +B'_m$)
-                \STATE Respuesta'.second = $\dfrac{A'_1}{B'_1+B'_2+\ldots +B'_m}$
+                \STATE Respuesta'.first.emplace\_back($A'_1, B'_1\cup B'_2\cup \ldots \cup B'_m$)
+                \STATE Respuesta'.second = $\dfrac{A'_1}{B'_1\cup B'_2\cup \ldots \cup B'_m}$
                 \STATE {$M[1][n] =$ Respuesta'}
             \ENDIF
             \RETURN $M[1][n]$
@@ -399,11 +399,11 @@ Por lo tanto, si $c = \dfrac{1}{2}$:
             \STATE Sea $n_*$ y $m_*$ el número de bloques en $A_*$ y $B_*$, respectivamente.
             \IF {$M[n_*][m_*]$ != $\infty$}
                 \STATE {Respuesta' = $M[n_*][m_*]$}
-                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_n, B_{k+1}+\ldots+B_m$)
+                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_n, B_{k+1}\cup \ldots\cup B_m$)
                 \STATE Respuesta'.second += $\frac{A_n}{B_{k+1}+\ldots+B_m}$
             \ELSE
                 \STATE Respuesta' = {\textsc{MIN-MATCHING}$(A_*, B_*)$}
-                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_n, B_{k+1}+\ldots+B_m$)
+                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_n, B_{k+1}\cup \ldots\cup B_m$)
                 \STATE Respuesta'.second += $\frac{A_n}{B_{k+1}+\ldots+B_m}$
             \ENDIF
             \IF {$min >$ Respuesta'.second}
@@ -417,11 +417,11 @@ Por lo tanto, si $c = \dfrac{1}{2}$:
             \STATE Sea $n_*$ y $m_*$ el número de bloques en $A_*$ y $B_*$, respectivamente.
             \IF {$M[n_*][m_*]$ != $\infty$}
                 \STATE {Respuesta' = $M[n_*][m_*]$}
-                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_{k+1} + \ldots + A_n, B_m$)
+                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_{k+1} \cup  \ldots \cup  A_n, B_m$)
                 \STATE Respuesta'.second += $\frac{A_n}{B_{k+1}+\ldots+B_m}$
             \ELSE
                 \STATE Respuesta' = {\textsc{MIN-MATCHING}$(A_*, B_*)$}
-                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_{k+1} + \ldots + A_n, B_m$)
+                \STATE Respuesta'.first = Respuesta'.first $\cup$ ($A_{k+1} \cup  \ldots \cup  A_n, B_m$)
                 \STATE Respuesta'.second += $\frac{A_{k+1} + \ldots + A_n}{B_m}$
             \ENDIF
             \IF {$min >$ Respuesta'.second}
@@ -436,18 +436,6 @@ Por lo tanto, si $c = \dfrac{1}{2}$:
 
 En este caso, cada vez que calculamos el peso mínimo de una combinación en especial, la guardamos en su lugar correspondiente en la matriz de memoización para que siguientes llamadas recursivas con los mismos parámetros solo agarren el valor de la matriz, de tal manera, tenemos un acceso en $O(1)$ para resultados memoizados. Como cada llamada recursiva siempre estará dentro de los límites $n$ y $m$ de la matriz de memoización, cada celda será calculada como máximo, una vez. Por lo tanto, tenemos que en el peor caso, llenaremos todas las celdas de la matriz, teniendo un total de $n$ \mathcal{x} $m$ accesos a la matriz. Por ello, podemos concluir que el algoritmo memoizado corre en $O(mn)$.
 
-\section*{Implementación}
-
-La implementación del algoritmo Greedy, Recursivo y Memoizado, se encuentra en el siguiente repositorio:
-
-\begin{itemize}
-    \item \url{https://github.com/MenuMarino/Proyecto-ADA}
-\end{itemize}
-
-\newpage
-
-\begin{comment}
-
 \section{Programación Dinámica}
 
 \textbf{Analice, diseñe e implemente un algoritmo de programaci\'on din\'amica para el problema \textsc{Min-Matching}. Su algoritmo deber\'a encontrar el matching de peso m\'inimo.}\\
@@ -459,18 +447,22 @@ La implementación del algoritmo Greedy, Recursivo y Memoizado, se encuentra en 
         \STATE Sea $A'$ el arreglo con los bloques de $A$ con $n$ bloques.
         \STATE Sea $B'$ el arreglo con los bloques de $B$ con $m$ bloques
         \STATE Sea $X$ el vector de las conexiones que se van a realizar entre $A'$ y $B'$.
-        \STATE Sea $Respuesta$ un $pair<vector, float>$ que contiene X y el peso.
+        \STATE Sea $Respuesta_i$ un $pair<vector, float>$ que contiene X y el peso.
         \STATE Sea $M$ una matriz declarada globalmente que contiene las $Respuestas$.
         \STATE {$sum \gets 0$}
         \FOR{i = 1 \textbf{to} n}
-            \STATE {$sum \gets sum + A_i$}
-            \STATE {M[i][1] = $\dfrac{sum}{B_1}$}
+            \STATE {Respuesta'.first.emplace\_back($A'_1\cup \ldots \cup A'_i$, $B'_1$)}
+            \STATE {$sum \gets  sum + A_i$}
+            \STATE {Respuesta'.second $\gets sum$}
+            \STATE {M[i][1] = Respuesta'}
         \ENDFOR
         \STATE
         \STATE {$sum \gets 0$}
         \FOR{\text{j = 1 \textbf{to} m}}
+            \STATE {Respuesta'.first.emplace\_back($A'_1$, $B'_1 \cup \ldots \cup B'_j$)}
             \STATE {$sum \gets sum + B_j$}
-            \STATE {M[1][j] = $\dfrac{A_1}{sum}$}
+            \STATE {Respuesta'.second $\gets sum$}
+            \STATE {M[1][j] = Respuesta'}
         \ENDFOR
         \STATE
         \STATE {$min_1 \gets \infty$}
@@ -481,34 +473,41 @@ La implementación del algoritmo Greedy, Recursivo y Memoizado, se encuentra en 
         \STATE
         \STATE {$weight_1 \gets 0$}
         \STATE {$weight_2 \gets 0$}
+        \STATE {$conexiones_1 \gets \emptyset$}
+        \STATE {$conexiones_2 \gets \emptyset$}
         \STATE
         \FOR{\text{i = 2 \textbf{to} n}}
             \FOR{\text{j = 2 \textbf{to} m}}
                 \FOR{\text{k = j-1 \textbf{to} 1}}
+                \STATE {$conexiones_1 \gets \emptyset$}
                     \FOR{\text{a = k+1 \textbf{to} j}}
                         \STATE {$sum_1 \gets B_a$}
+                        \STATE {$conexiones_1 \gets conexiones_1 \cup B_a$}
                     \ENDFOR
-                    \STATE {$weight_1 \gets M[i-1][k] + \dfrac{A_i}{sum_1}$}
+                    \STATE {$conexiones_1 \gets M[i-1][k].first \cup conexiones_1$}
+                    \STATE {$weight_1 \gets M[i-1][k].first + \dfrac{A_i}{sum_1}$}
                     \IF {$weight_1 < min_1$}
-                        \STATE {$min_1 \gets weight_1$}
+                        \STATE {$Respuesta_1.first \gets weight_1$}
+                        \STATE {$Respuesta_1.second \gets conexiones_1$}
                     \ENDIF
                 \ENDFOR
                 \FOR{\text{k = 1 \textbf{to} i-1}}
-                    \FOR{\text{a = k+1 \textbf{to} i}}                      
-                    \STATE {$sum_2 \gets A_a$}
+                    \STATE {$conexiones_2 \gets \emptyset$}
+                    \FOR{\text{a = k+1 \textbf{to} i}}        \STATE {$sum_2 \gets A_a$}
+                        \STATE {$conexiones_2 \gets conexiones_2 \cup A_a$}
                     \ENDFOR
-                    \STATE {$weight_2 \gets M[k][j-1] + \dfrac{sum_2}{B_j}$}
+                    \STATE {$conexiones_2 \gets M[k][j-1].first \cup conexiones_2$}
+                    \STATE {$weight_2 \gets M[k][j-1].second + \dfrac{sum_2}{B_j}$}
                     \IF {$weight_2 < min_2$}
-                        \STATE {$min_2 \gets weight_2$}
+                        \STATE {$Respuesta_2.first \gets weight_2$}
+                        \STATE {$Respuesta_2.second \gets conexiones_2$}
                     \ENDIF 
                 \ENDFOR
                 \STATE
                 \IF {$min_1 < min_2$} 
-                    \STATE {$M[i][j] \gets min_1$}
-                \ELSIF {$min_2 < min_1$}
-                    \STATE {$M[i][j] \gets min_2$}
+                    \STATE {$M[i][j] \gets Respuesta_1$}
                 \ELSE
-                    \STATE {$M[i][j] \gets min_2$}
+                    \STATE {$M[i][j] \gets Respuesta_2$}
                 \ENDIF
             \ENDFOR
         \ENDFOR
@@ -523,32 +522,94 @@ La implementación del algoritmo Greedy, Recursivo y Memoizado, se encuentra en 
         m + k_1 & \text{si } n = 1 \text{ y } m > 1\\\\
         n + k_2 & \text{si } m = 1 \text{ y } n > 1\\\\
         k_3 & \text{si } m = 1 \text{ y } n = 1\\\\
-        n + m + k_4 + m * n * k_5 & \text{caso contrario}\\
+        m * m * n * k_4 + n + m + k_5 & \text{caso contrario}\\
     \end{cases}
 \end{equation*}
+\newline
+Explicaremos el tiempo de ejecución por partes. Primero, el $m$ * $m$ * $n$ * $k_4$ viene del for anidado que empieza en la línea 31 del pseudocódigo. Se hacen $m$ * $m-1$ iteraciones $n$ veces (en verdad, se hacen $m$ * $m-1$ iteraciones, solo 1 vez, ya que luego se le resta 2 a $m$, luego 3, luego 4 y así sucesivamente hasta 1, sin embargo, para sacar el \textit{upper-bound} esa suposición es válida), por eso se multiplica y además se multiplica un $k_4$, ya que en cada iteración se hace trabajo que depende del $i$ y el $j$ de cada iteración. Si bien es cierto que hay bucles for dentro, lo que nos importa es el for anidado $i$ y $j$, ya que esos dependen de $m$ y $n$, lo cual son nuestros inputs. Por ello, decidimos llamar el trabajo que se hace en cada iteración del for anidado $k_4$. Segundo, el $m$ + $n$ + $k_5$ viene de los dos primeros bucles for en el comienzo del pseudocódigo. El primero itera $n$ veces y el segundo itera $n$ veces, por lo tanto, es $m$ + $n$. Además, en cada iteración de ambos bucles, se hace trabajo ``constante'', el cual consta de llenar los casos base en la matriz de programación dinámica, por lo que se le pone a ese trabajo conjunto de ambos bucles, $k_5$, el cual es igual a $k_1$ (trabajo constante del primero bucle) + $k_2$ (trabajo constante del segundo bucle. A continuación hacemos la demostración formal de que el algoritmo corre en $\mathcal{O}(m^{2}n)$:
+
+$$m^{2}nk_4 + n + m + k_5 \leq cm^{2}n$$
+
+Obviemos las constantes ya que estamos acotando superiormente:
+
+$$m^{2}n + n + m \leq cm^{2}n$$
+
+Digamos que $c = 3$, entonces:
+
+$$m^{2}n + n + m \leq 3m^{2}n$$
+
+Lo cual es igual a:
+
+$$m^{2}n + n + m \leq m^{2}n + m^{2}n + m^{2}n$$
+
+Lo cual demuestra que nuestro algoritmo corre en $\mathcal{O}(m^{2}n)$.
 
 \section{Transformación Voraz}
 
 \textbf{Analice, diseñe e implemente un algoritmo voraz con complejidad cuadrática para el problema \textsc{MIN-TRANSFORMACION}. Su algoritmo no necesariamente deberá encontrar la transformación de peso mínimo. Debe usar como subrutina al algoritmo implementado en la Pregunta 1.} \\
 
 \begin{algorithmic}[1]
-    \textit{Entrada del algoritmo:} Dos matrices $A$ y $B$ de ceros y unos de tamaño $p$ \mathcal{x} $q$.\newline
-    \textit{Salida del algoritmo:} Un transformación entre $A$ y $B$, no necesariamente óptima, y su peso.\newline
-    \textit{Tiempo de ejecuci\'on del algoritmo:} $O(pq)$.\newline
+    \REQUIRE Dos matrices $A$ y $B$ de ceros y unos de tamaño $p$ \mathcal{x} $q$. \newline
+    \ENSURE Una transformación óptima entre $A$ y $B$, y su peso. \newline
+    \textit{Tiempo de ejecuci\'on del algoritmo:} $\mathcal{O}(pq)$.\newline\newline
+    
+    
+     \TITLE {\textbf{\textsc{MIN-TRANSFORMATION-GREEDY}$(A',B')$:}}
+     \STATE {Sea $A'$ la matriz donde cada fila tiene los bloques de cada fila de $A$, $\forall_{1 \leq i \leq p}$}.
+     \STATE {Sea $B'$ la matriz donde cada fila tiene los bloques de cada fila de $B$, $\forall_{1 \leq i \leq p}$}.
+     \STATE{Sea $respuesta$ el vector de pairs que almacena en el primer elemento el matching para las correspondientes filas $i$ de $A'$ y $B'$ y en el segundo elemento el peso de dicho matching. Recordemos que el algoritmo MIN-MATCHING-GREEDY retorna un pair. En el primer elemento del pair se encuentra el matching y en el segundo elemento, su peso.}
+     \FOR{ $i$ = $1$ \textbf{to}  $A'.size()$}
+        \STATE{ $respuesta$ .pushback(MIN-MATCHING-GREEDY($A'[i],B'[i]$))}
+     \ENDFOR
+     \RETURN respuesta
+        
 \end{algorithmic}
+\subsection*{Análisis de Tiempo}
+
+Sabemos que el costo de \textbf{\textsc{Min-Matching-Greedy}} es de $\mathcal{O}(max(m,n))$. Donde $n$ es el número de bloques de $A$ y $m$ el número de bloques de $B$, donde $A$ y $B$ tienen tamaño $q$. Observe que si \textbf{\textsc{Min-Matching-Greedy}} corre en $\mathcal{O}(max(m,n))$, entonces también corre en $\mathcal{O}(q)$, ya que siempre el número de bloques será menor al número de bits en el arreglo. Entonces, como \textbf{\textsc{Min-Matching-Greedy}} corre en $\mathcal{O}(q)$ y llamamos a la función \textbf{\textsc{Min-Matching-Greddy}} $p$ veces, podemos afirmar que el algoritmo \textbf{\textsc{Min-Transformacion-Greedy}} corre en $\mathcal{O}(pq)$.
 
 \section{Transformación Programación Dinámica}
 
 \textbf{Analice, diseñe e implemente un algoritmo de programación dinámica con complejidad cúbica para el problema \textsc{MIN-TRANSFORMACION}. Su algoritmo deberá devolver una transformación de peso mínimo. Debe usar como subrutina al algoritmo implementado en el Pregunta 5.} \\
 
+\textit{Tiempo de ejecuci\'on del algoritmo:} $\mathcal{O}(pq^3)$.\newline
+
 \begin{algorithmic}[1]
-    \textit{Entrada del algoritmo:} Dos matrices $A$ y $B$ de ceros y unos de tamaño $p$ \mathcal{x} $q$.\newline
-    \textit{Salida del algoritmo:} Una transformación óptima entre $A$ y $B$, y su peso.\newline
-    \textit{Tiempo de ejecuci\'on del algoritmo:} $O(pq^{2})$.\newline
+    \REQUIRE Dos matrices $A$ y $B$ de ceros y unos de tamaño $p$ x $q$.
+    \ENSURE Una transformación óptima entre $A$ y $B$, y su peso.\newline\newline
+    \TITLE {\textbf{\textsc{MIN-TRANSFORMACION}$(A,B)$:}}
+    \STATE {Sea $A'$ la matriz donde cada fila tiene los bloques de cada fila de $A$, $\forall_{1 \leq i \leq p}$}.
+    \STATE {Sea $B'$ la matriz donde cada fila tiene los bloques de cada fila de $B$, $\forall_{1 \leq i \leq p}$}.
+    \STATE {Sea $peso$ la variable que va a guardar el peso del Min-Matching entre $A$ y $B$.}
+    \STATE {Sea $M$ una matriz donde cada fila $i$ de $M$ contiene el min-matching entre la fila $i$ de $A$ y $B$, $\forall_{1 \leq i \leq p}$. Es decir, cada fila $i$ de $M$ es un array de pairs que representan el min-matching entre la fila $i$ de $A$ y $B$}.
+    \STATE
+    \STATE $peso$ $\gets$ $0$
+    \STATE
+    \FOR{\text{i = 1 \textbf{to} p}}
+        \STATE Sea $A'_i$ la i-ésima fila de $A'$
+        \STATE Sea $B'_i$ la i-ésima fila de $B'$
+        \STATE $pair$ \gets \textbf{\textsc{Min-Matching}}($A'_i$, $B'_i$)
+        \STATE $peso$ $\gets$ peso $+$ $pair.second$
+        \STATE $M[i]$ $\gets$ $pair.first$
+    \ENDFOR
+    \STATE
+    \STATE Sea $respuesta$ un pair tal que:
+    \STATE $respuesta.first$ $\gets$ $M$
+    \STATE $respuesta.second$ $\gets$ $peso$
+    \STATE
+    \RETURN $respuesta$
 \end{algorithmic}
 
+\subsection*{Análisis de Tiempo}
+
+Sabemos que el costo de \textbf{\textsc{Min-Matching}} es de $\mathcal{O}(m^{2}n)$. Donde $n$ es el número de bloques de $A$ y $m$ el número de bloques de $B$, donde $A$ y $B$ tienen tamaño $q$. Observe que si \textbf{\textsc{Min-Matching}} corre en $\mathcal{O}(m^{2}n)$, entonces también corre en $\mathcal{O}(q^3)$, ya que siempre el número de bloques será menor al número de bits en el arreglo. Entonces, como \textbf{\textsc{Min-Matching}} corre en $\mathcal{O}(q^3)$ y llamamos a la función \textbf{\textsc{Min-Matching}} $p$ veces, podemos afirmar que el algoritmo \textbf{\textsc{Min-Transformacion}} corre en $\mathcal{O}(pq^3)$.
+
 \section{Lectura de im\'agenes}
-\textbf{Implementar una funci\'on de lectura de im\'agenes. Deber\'a recibir como entrada una imagen y devolver una matriz de 0s y 1s que codifica a la imagen le\'ida. Esta funci\'on deber\'a ser lo suficientemente flexible (recibir tres par\'ametros adicionales) para poder usar uno u otro m\'etodo de transformaci\'on. As\'i tambi\'en, deber\'ia ser flexible para decidir cual es el umbral que decide si se transforma a 0 o a 1.} \newline
+\textbf{Implementar una funci\'on de lectura de im\'agenes. Deber\'a recibir como entrada una imagen y devolver una matriz de 0s y 1s que codifica a la imagen le\'ida. Esta funci\'on deber\'a ser lo suficientemente flexible (recibir tres par\'ametros adicionales) para poder usar uno u otro m\'etodo de transformaci\'on. As\'i tambi\'en, deber\'ia ser flexible para decidir cual es el umbral que decide si se transforma a 0 o a 1.} \\
+
+Esta función llamada \textsc{transform}, retorna la imagen transformada representada por una matriz de 0s y 1s, se puede encontrar en nuestro código dentro de la clase \textsc{MatrixTransformer}, la cual sirve como una asbtracción para lidiar con todo lo relacionado a la transformación de la imagen, la cual inicialmente es representada por pixeles que tienen tres componentes (RGB), y despues de ser transformada, se convierte en una matriz de 0s y 1s, un cero o un uno por cada pixel. Usamos tres métodos para decidir si un pixel con los componentes \textbf{R}, \textbf{G} y \textbf{B}, debe convertirse a \textbf{0} o a \textbf{1}. Estos métodos son los siguientes: 601, 709 y 240. Cada método representa una fórmula que calcula el \textit{brightness} en función de los componentes RGB. La fórmula se ve de la siguiente manera: $$Y = c_1R + c_2G + c_3B$$ Donde $Y$ representa el \textit{brightness} de ese pixel y $R$, $G$ y $B$ representan el valor de cada componente del pixel. Cada método tiene distintas constantes o coeficientes ($c_1,\text{ }c_2 \text{ y } c_3$). Si el $Y$ era menor que un \textit{umbral} que se le pasa como parámetro al constructor de \textsc{MatrixTransformer}, entonces el pixel podía ser representado por un \textbf{1}, ya que el \textit{brightness} es ``bajo'' y por lo tanto el pixel está más cerca de negro. Si el $Y$ era mayor o igual que el \textit{umbral}, entonces el dicho pixel podía ser representado por un \textbf{0}, ya que el \textit{brightness} es ``alto'' y por lo tanto el pixel está más cerca de blanco. Repetimos esta operación para cada pixel en la imagen, insertando el 0 o 1 en la nueva matriz. La razón por la que ponemos ``alto'' y ``bajo'' entre comillas, es que esas nociones dependel del umbral. \\
+Cabe resaltar que además de recibir el umbral, el constructor de \textsc{MatrixTransformer} también recibe el método inicial (601, 709 o 240) con el que se quiere hacer la transformación y el \textit{path} de la imagen. Además, \textsc{MatrixTransformer} tiene dos setters \textsc{setMethod} que permite cambiar el método de transformación y \textsc{setUmbral} que permite cambiar el umbral que decidirá si el pixel se transforma a 0 o 1.\\
+
 \textbf{Finalmente, haremos una animaci\'on que ejemplifica una transformaci\'on de una imagen en
 otra. Para ello debemos analizar cada matching encontrado en la soluci\'on. Si en el matching
 entre A[i] y B[i] hay una divisi\'on, entonces es razonable que el bloque correspondiente en
@@ -559,6 +620,7 @@ de los cuales se ir\'a transformando progresivamente en su correspondiente bloqu
 Un razonamiento an\'alogo occurre en el caso de una agrupaci\'on.}
 
 \section{Animaci\'on}
+
 \textbf{Implementar una animaci\'on para transformar im\'agenes. Deber\'a recibir como entrada dos im\'agenes y mostrar una animaci\'on que transforma la primera
 imagen en la segunda. Aunque internamente se trabaje con matrices de ceros y unos, esta
 animaci\'on deber\'a mostrar la transformaci\'on en colores.} \newline
@@ -570,28 +632,154 @@ utilizar:}
     \item Utiliza la subrutina implementada en la pregunta 7 (Prog. Din\'amica).
     \item Utiliza la subrutina implementada en la pregunta 10 (Prog. Din\'amica Mejorada).
 \end{itemize}
-\newline
 
-\textbf{La subrutina mejorada (item 3) es descrita a continuaci\'on. Una mejor medida de la
-distorsi\'on entre dos vectores de pixels, es decir el peso de un matching, viene dado por la
-varianza. Sean $a_1, a_2,\ldots,a_m$ los tamaños de los bloques de un arreglo $A[x]$. Sean $b_1, b_2, \ldots, b_n$ los tamaños de los bloques de un arreglo $B[x]$. Sea $\sum_{i=1}^{n} a_i / \sum_{i=1}^{m} b_i$. Si $D$ es una divisi\'on o agrupaci\'on en un matching entre $A[x]$ y $B[x]$, el \textit{peso promedio} asociado a dicha divisi\'on o agrupaci\'on, denotado por $\bar{w}(D)$ es} \newline
-\begin{equation*}
-    \bar{w}(D) = |w(D) - \mu|.
-\end{equation*}
-\textbf{An\'alogamente, el peso promedio de un matching $M$, denotado por $\bar{w}(M)$ es definido como la suma de los pesos promedios de las agrupaciones y las divisiones en $M$.}
+Nosotros realizamos dos m\'etodos para transformar las im\'agenes.
 
-\bar{w}
+\begin{enumerate}
+    \item Utilizando los matches: Ya sea una agrupaci\'on o divisi\'on, nosotros podemos ver al matching como dos filas. Supongamos que tenemos 3 bloques de 3, 4 y 2 bits que se agrupan en 1 bloque de 8 bits, al ver a estos tres primeros bloques como 1 solo lo que realizamos es lo siguiente: transformamos el primer bit del primer bloque, con el primer bit del segundo bloque (aumentando o disminuyendo el RGB de este bit). En caso uno de los bloques tenga m\'as bits que el otro, este proceso se har\'a hasta que el bloque con menor bits termine.
+    \item Pixel por pixel: Este m\'etodo se basa en hacer una transformaci\'on de los bits uno a uno. No utiliza los matches, simplemente se transforma el bit $i, j$ de la primera matriz al bit $i, j$ de la segunda matriz.
+\end{enumerate}
 
 \section{Transformación Programación Dinámica Mejorada}
 
 \textbf{Analice, diseñe e implemente un algoritmo de programación dinámica con complejidad cúbica para el problema \textsc{MIN-MATCHING}. Su algoritmo deberá devolver la transformación de peso \textit{promedio} mínimo. Deberá usar como subrutina un algoritmo que encuentre el peso promedio mínimo de un matching.} \\
 
+\textit{Tiempo de ejecuci\'on del algoritmo:} $\mathcal{O}(pq^{3})$.\newline
+
 \begin{algorithmic}[1]
-    \textit{Entrada del algoritmo:} Dos matrices $A$ y $B$ de ceros y unos de tamaño $p$ \mathcal{x} $q$.\newline
-    \textit{Salida del algoritmo:} Una transformación óptima entre $A$ y $B$, y su peso.\newline
-    \textit{Tiempo de ejecuci\'on del algoritmo:} $O(pq^{2})$.\newline
+    \REQUIRE Dos matrices $A$ y $B$ de ceros y unos de tamaño $p$ x $q$.
+    \ENSURE Una transformación óptima entre $A$ y $B$, y su peso.\newline\newline
+    \TITLE {\textbf{\textsc{MIN-TRANSFORMACION-MEJORADA}$(A,B)$:}}
+        \STATE {Sea $A'$ la matriz donde cada fila tiene los bloques de cada fila de $A$, $\forall_{1 \leq i \leq p}$}.
+    \STATE {Sea $B'$ la matriz donde cada fila tiene los bloques de cada fila de $B$, $\forall_{1 \leq i \leq p}$}.
+    \STATE {Sea $peso$ la variable que va a guardar el peso del Min-Matching entre $A$ y $B$.}
+    \STATE {Sea $M$ una matriz donde cada fila $i$ de $M$ contiene el min-matching entre la fila $i$ de $A$ y $B$, $\forall_{1 \leq i \leq p}$. Es decir, cada fila $i$ de $M$ es un array de pairs que representan el min-matching entre la fila $i$ de $A$ y $B$}.
+    \STATE
+    \STATE $peso$ $\gets$ $0$
+    \STATE
+    \FOR{\text{i = 1 \textbf{to} p}}
+        \STATE Sea $A'_i$ la i-ésima fila de $A'$
+        \STATE Sea $B'_i$ la i-ésima fila de $B'$
+        \STATE $pair$ \gets \textbf{\textsc{Min-Matching-Mejorado}}($A'_i$, $B'_i$)
+        \STATE $peso$ $\gets$ peso $+$ $pair.second$
+        \STATE $M[i]$ $\gets$ $pair.first$
+    \ENDFOR
+    \STATE
+    \STATE Sea $respuesta$ un pair tal que:
+    \STATE $respuesta.first$ $\gets$ $M$
+    \STATE $respuesta.second$ $\gets$ $peso$
+    \STATE
+    \RETURN $respuesta$
 \end{algorithmic}
 
+\begin{itemize}
+    \item Min-Matching-Mejorado realiza una transformaci\'on mejorada entre dos arreglos de 1s y 0s.
+\end{itemize}
+
+\begin{algorithmic}[1]
+    \REQUIRE Dos arreglos $A$ y $B$ de ceros y unos, de tamaño $p$ con $n$ y $m$ bloques, respectivamente.
+    \ENSURE Un matching entre $A$ y $B$, de peso mínimo, y su peso. \newline \newline
+    \TITLE {\textbf{\textsc{Min-Matching-Mejorado}$(A,B)$:}}
+        \STATE Sea $A'$ el arreglo con los bloques de $A$ con $n$ bloques.
+        \STATE Sea $B'$ el arreglo con los bloques de $B$ con $m$ bloques
+        \STATE Sea $X$ el vector de las conexiones que se van a realizar entre $A'$ y $B'$.
+        \STATE Sea $Respuesta_i$ un $pair<vector, float>$ que contiene X y el peso.
+        \STATE Sea $M$ una matriz declarada globalmente que contiene las $Respuestas$.
+        \STATE {$sum \gets 0$}
+        \STATE {$VarianzaA \gets 0$}
+        \STATE {$VarianzaB \gets 0$}
+        
+        \FOR{i = 1 \textbf{to} n}
+            \STATE {Respuesta'.first.emplace\_back($A'_1\cup \ldots \cup A'_i$, $B'_1$)}
+            \STATE {$sum \gets sum + A_i$}
+            \STATE {Respuesta'.second $\gets sum$}
+            \STATE {M[i][1] = Respuesta'}
+        \ENDFOR
+        \STATE
+        \STATE {$VarianzaA \gets sum$}
+        \STATE {$sum \gets 0$}
+        \STATE
+        \FOR{\text{j = 1 \textbf{to} m}}
+            \STATE {Respuesta'.first.emplace\_back($A'_1$, $B'_1 \cup \ldots \cup B'_j$)}
+            \STATE {$sum \gets sum + B_j$}
+            \STATE {Respuesta'.second $\gets sum$}
+            \STATE {M[1][j] = Respuesta'}
+        \ENDFOR
+        \STATE
+        \STATE {$VarianzaB \gets sum$}
+        \STATE {$Varianza \gets \frac{VarianzaA}{VarianzaB}$}
+        \STATE
+        \STATE {$min_1 \gets \infty$}
+        \STATE {$min_2 \gets \infty$}
+        \STATE {$sum_1 \gets 0$}
+        \STATE {$sum_2 \gets 0$}
+        \STATE {$weight_1 \gets 0$}
+        \STATE {$weight_2 \gets 0$}
+        \STATE {$conexiones_1 \gets \emptyset$}
+        \STATE {$conexiones_2 \gets \emptyset$}
+        \STATE
+        \FOR{\text{i = 2 \textbf{to} n}}
+            \FOR{\text{j = 2 \textbf{to} m}}
+                \FOR{\text{k = j-1 \textbf{to} 1}}
+                \STATE {$conexiones_1 \gets \emptyset$}
+                    \FOR{\text{a = k+1 \textbf{to} j}}
+                        \STATE {$sum_1 \gets B_a$}
+                        \STATE {$conexiones_1 \gets conexiones_1 \cup B_a$}
+                    \ENDFOR
+                    \STATE {$conexiones_1 \gets M[i-1][k].first \cup conexiones_1$}
+                    \STATE {$weight_1 \gets M[i-1][k].first + \dfrac{A_i}{sum_1}$}
+                    \IF {$weight_1 < min_1$}
+                        \STATE {$Respuesta_1.first \gets weight_1$}
+                        \STATE {$Respuesta_1.second \gets conexiones_1$}
+                    \ENDIF
+                \ENDFOR
+                \FOR{\text{k = 1 \textbf{to} i-1}}
+                    \STATE {$conexiones_2 \gets \emptyset$}
+                    \FOR{\text{a = k+1 \textbf{to} i}}        \STATE {$sum_2 \gets A_a$}
+                        \STATE {$conexiones_2 \gets conexiones_2 \cup A_a$}
+                    \ENDFOR
+                    \STATE {$conexiones_2 \gets M[k][j-1].first \cup conexiones_2$}
+                    \STATE {$weight_2 \gets M[k][j-1].second + \dfrac{sum_2}{B_j}$}
+                    \IF {$weight_2 < min_2$}
+                        \STATE {$Respuesta_2.first \gets weight_2$}
+                        \STATE {$Respuesta_2.second \gets conexiones_2$}
+                    \ENDIF 
+                \ENDFOR
+                \STATE
+                \IF {$min_1 < min_2$} 
+                    \STATE {$M[i][j].first \gets Respuesta_1.first$}
+                    \STATE {$M[i][j].second \gets |Respuesta_1.second - Varianza|$}
+                \ELSE
+                    \STATE {$M[i][j].first \gets Respuesta_2.first$}
+                    \STATE {$M[i][j].second \gets |Respuesta_2.second - Varianza|$}
+                \ENDIF
+            \ENDFOR
+        \ENDFOR
+        \RETURN {$M[n][m]$}
+\end{algorithmic}
+
+\section*{Análisis de Tiempo}
+
+\begin{comment}
+
+En este caso, podemos notar que el algoritmo \textsc{Min-Matching-Mejorado} es el mismo que \textsc{Min-Transformacion} de la pregunta 7. Sin embargo, ambos difieren en que \textsc{Min-Matching-Mejorado} tiene las variables \textit{VarianzaA}, \textit{VarianzaB} y \textit{Varianza}. \textit{VarianzaA} se setea a la suma del tamaño de cada bloque en $A$, \textit{VarianzaB} a la suma del tamaño de cada bloque en $B$ y \textit{Varianza} se setea a $\dfrac{VarianzaA}{VarianzaB}$. Luego, le restamos \textit{Varianza} al peso de la división o agrupación en cada iteración, para así obtener el peso \textit{promedio} y luego poder elegir el peso promedio mínimo. \\\\
+Las modificaciones mencionadas que se le hicieron al algoritmo \textsc{Min-Transformacion} toman tiempo constante, por lo que podemos concluir que el tiempo que toma el algoritmo \textsc{Min-Matching-Mejorado} es $\mathcal{O}(pq^2)$.\\
+
+\textbf{O pongo esto:}\\
+
 \end{comment}
+
+Sabemos que el costo de \textbf{\textsc{Min-Matching-Mejorado}} es de $\mathcal{O}(m^{2}n)$, ya que hace exactamente lo mismo que \textbf{\textsc{Min-Matching}}, pero se le agrega un trabajo constante: inicialización de tres variables en las líneas 7, 8 y 27; actualización de estas variables en las líneas 16 y 26; y finalmente, una resta más en las líneas 69 y 72. \\\\ 
+En $\mathcal{O}(m^{2}n)$, $n$ representa el número de bloques de $A$ y $m$ es el número de bloques de $B$, donde $A$ y $B$ tienen tamaño $q$. Observe que si \textbf{\textsc{Min-Matching-Mejorado}} corre en $\mathcal{O}(m^{2}n)$, entonces también corre en $\mathcal{O}(q^3)$, ya que siempre el número de bloques será menor al número de bits en el arreglo. Entonces, como \textbf{\textsc{Min-Matching-Mejorado}} corre en $\mathcal{O}(q^3)$ y llamamos a la función \textbf{\textsc{Min-Matching-Mejorado}} $p$ veces, podemos afirmar que el algoritmo \textbf{\textsc{Min-Transformacion-Mejorada}} corre en $\mathcal{O}(pq^3)$.
+
+\section*{Implementación}
+
+Las implementaciones se encuentran en el siguiente repositorio de GitHub:
+
+\begin{itemize}
+    \item \url{https://github.com/MenuMarino/Proyecto-ADA}
+\end{itemize}
+
+\newpage
 
 \end{document}
